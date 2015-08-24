@@ -1,15 +1,28 @@
 {
-  "name": "example",
+  "name": "nodeAPI",
   "version": "1.0.0",
   "description": "test programm",
   "main": "sample.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node sample.js"
   },
   "author": "pbborel",
-  "license": "ISC",
+  "keywords": [
+  "node",
+  "heroku",
+  "express"
+],
+
   "dependencies": {
     "express": "^4.13.3",
     "mongoose": "~3.6.13",
-  }
+  },
+  "engines": {
+    "node": "0.12.2"
+  },
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/heroku/nodeAPI"
+},
+  "license": "MIT"
 }
