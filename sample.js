@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-// var mongoose = require('mongoose');
+  // var mongoose = require('mongoose');
 // var mongodb = require('mongodb');
 
 // mongoose connect
@@ -78,7 +78,9 @@ router.get('/', function(req, res) {
 router.route('/user/borel')
   // gel all user
   .get(function (req, res) {
-    var user = {'fistName':'PB', 'lastName':'Borel'};
+    var user = 'user'[{'fistName':'PB', 'lastName':'Borel'},
+                      {'fistName':'Pauline', 'lastName':'Borel'}
+                    ];
       res.json(user);
   });
 
