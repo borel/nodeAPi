@@ -1,8 +1,8 @@
 var express = require('express');
 var app = require('express')(),
     server = require('http').createServer(app),
-    io = require('socket.io').listen(server),
-    fs = require('fs');
+    io = require('socket.io').listen(server)
+
 
 // Chargement de la page index.html
 app.get('/', function (req, res) {
