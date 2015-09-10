@@ -41,12 +41,12 @@ var app = express();
 //   });
 // });
 //
-// var server = app.listen(3000, function () {
-//   var host = server.address().address;
-//   var port = server.address().port;
-//
-//   console.log('Example app listening at http://%s:%s', host, port);
-// });
+var server = app.listen(3000, function () {
+  var host = server.address().address;
+  var port = server.address().port;
+
+  console.log('Example app listening at http://%s:%s', host, port);
+});
 
 var port = process.env.PORT || 8080;        // set our port
 // ROUTES FOR OUR API
@@ -81,6 +81,14 @@ router.route('/user/borel')
     var user = {'fistName':'Pauline', 'lastName':'Borel'};
       res.json(user);
   });
+
+
+  router.route('/user/realtime')
+    // gel all user
+    .get(function (req, res) {
+      var user = {'fistName':'real', 'lastName':'time'};
+        res.json(user);
+    });
 
   // REGISTER OUR ROUTES -------------------------------
   // all of our routes will be prefixed with /api
