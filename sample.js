@@ -8,10 +8,15 @@ var app = require('express')(),
       io.set("polling duration", 10);
     });
 
+// Set port
+app.set('port', (process.env.PORT || 5000));
+
 
   //Chargement de la page index.html
   app.get('/', function (req, res) {
     res.sendfile(__dirname + '/index.html');
+  }).listen(app.get('port'), function() {
+    console.log('App is running, server is listening on port ', app.get('port'));
   });
 
 ////////////////////////////////////////
@@ -61,4 +66,4 @@ router.route('/robot/1')
 //     });
 // });
 
-server.listen(5000);
+server.listen(app.get('port'));
