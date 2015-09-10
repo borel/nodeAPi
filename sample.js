@@ -2,6 +2,7 @@ var express = require('express');
 var app = require('express')(),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server)
+var port = process.env.PORT || 5000
 
     // io.configure(function () {
     //   io.set("transports", ["xhr-polling"]);
@@ -15,9 +16,7 @@ app.set('port', (process.env.PORT || 5000));
   //Chargement de la page index.html
   app.get('/', function (req, res) {
     res.sendfile(__dirname + '/index.html');
-  }).listen(app.get('port'), function() {
-    console.log('App is running, server is listening on port ', app.get('port'));
-  });
+  })
 
 ////////////////////////////////////////
 // API routing
@@ -66,4 +65,4 @@ io.sockets.on('connection', function (socket, pseudo) {
     });
 });
 
-server.listen(app.get('port'));
+server.listen(port);
