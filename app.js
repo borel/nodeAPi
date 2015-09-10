@@ -10,9 +10,9 @@ var app = require('express')(),
 
 
 // Chargement de la page index.html
-app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
-});
+// app.get('/', function (req, res) {
+//   res.sendfile(__dirname + '/index.html');
+// });
 
 ////////////////////////////////////////
 // API routing
