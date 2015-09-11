@@ -1,26 +1,21 @@
 var express = require('express');
 var app = require('express')(),
     server = require('http').createServer(app),
-    io = require('socket.io').listen(server)
-var port = process.env.PORT || 5000
+    io = require('socket.io').listen(server);
+var bodyParser = require('body-parser');
 
-    // io.configure(function () {
-    //   io.set("transports", ["xhr-polling"]);
-    //   io.set("polling duration", 10);
-    // });
-
-// Set port
-app.set('port', (process.env.PORT || 5000));
+server.listen(process.env.PORT || 8082);
 
 
-  //Chargement de la page index.html
-  app.get('/', function (req, res) {
-    res.sendfile(__dirname + '/index.html');
-  })
+//Chargement de la page index.html
+app.use(require('express').static(__dirname + '/client'));
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 ////////////////////////////////////////
 // API routing
 var router = express.Router();              // get an instance of the express Router
+
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
@@ -34,21 +29,27 @@ router.get('/', function(req, res) {
     res.json({ message: 'hooray! welcome to our api!' });
 });
 
-router.route('/robot/1')
-  // gel all user
-  .get(function (req, res) {
-        io.sockets.emit('message',{pseudo: 'robot', message: 'A m i a Robot or a human ?'});
-        res.send(200, 'Robot call');
-  });
+  router.route('/geo/add')
+      //add
+      .post(function (req, res) {
+         io.sockets.emit('message',{name: req.body.values.name, lat:  req.body.values.lat , long:  req.body.values.long});
 
-  router.route('/human/1')
-    // gel all user
-    .get(function (req, res) {
-        io.sockets.emit('message',{pseudo: 'human', message: 'human after all'});
-        res.send(200, 'Human call');
-    });
+          // io.sockets.emit('message',{name: 'borel', lat: '45.720580' , long: '3.187303'});
+
+          res.send(200, 'Marker call');
+      });
+
+
+  router.route('/geo/addSea')
+      // gel all user
+      .get(function (req, res) {
+          console.log(req);
+          io.sockets.emit('message',{name: 'human', lat: '4.32' , long: '172'});
+          res.send(200, 'Marker call');
+      });
 
   app.use('/api', router);
+  ///////////////////////////////
   // END ROUTING
   //////////////////////////////////
 
@@ -65,4 +66,9 @@ io.sockets.on('connection', function (socket, pseudo) {
     });
 });
 
-server.listen(port);
+// For hosing on Heroku
+io.configure(function () {
+  io.set("transports", ["xhr-polling"]);
+  io.set("polling duration", 10);
+  io.set('log level', 1)
+});

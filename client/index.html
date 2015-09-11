@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <title>Smoozi Tracker</title>
+    </head>
+    <body>
+
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmhelMVEXev83EyFPJhCJ1fYnQleKPfos&sensor=true"></script>
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="./jquery.min.js"></script>
+
+    	<script type="text/javascript">
+            ////////////////////////////////////////////////////////////////////
+            ////////////// GMAPS ///////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
+            var map = null;
+
+            function mapInitialize() {
+                map = new google.maps.Map(document.getElementById("map-canvas"), {
+                    zoom: 5,
+                    center: new google.maps.LatLng(45.720580, 3.187303)
+                });
+                infowindow = new google.maps.InfoWindow({ content: 'Test' });
+                google.maps.event.addListener(map, 'click', function() {
+                    infowindow.close(map);
+                });
+            }
+
+            function addMarker(name,lat,long){
+                var marker = new google.maps.Marker({ map:map });
+                google.maps.event.addListener(marker, 'click', function() {
+                            infowindow.setContent(marker.getTitle())
+                            infowindow.open(map, marker);
+                });
+
+                //Move the markers
+                marker.setTitle(name);
+                marker.setPosition(new google.maps.LatLng(lat, long));
+
+            }
+
+
+            ////////////////////////////////////////////////////////////////////
+            ////////////// /GMAPS ///////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
+
+            ////////////////////////////////////////////////////////////////////
+            ////////////// Chat ///////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
+
+            ////////////////////////////////////////////////////////////////////
+            ////////////// /Chat ///////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
+
+
+            ////////////////////////////////////////////////////////////////////
+            ////////////// Socket///////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
+            var socket = io.connect('http://localhost:8082');
+
+            socket.on('message', function(data) {
+                addMarker(data.name,data.lat,data.long);
+            })
+            ////////////////////////////////////////////////////////////////////
+            ////////////// /Socket///////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
+
+            ////////////////////////////////////////////////////////////////////
+            ////////////// Common ///////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
+            google.maps.event.addDomListener(window, 'load', mapInitialize);
+            ////////////////////////////////////////////////////////////////////
+            ////////////// /Common///////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
+
+
+    	</script>
+
+        <style>
+            #map-canvas  { height: 100%; width:100%; }
+            #user-number { font-size: 15px; font-weight: bold; font-color:black;}
+        </style>
+
+        <p> Welcome to Smoozi tracker</p>
+        <div id="map-canvas"></div>
+
+    </body>
+</html>

@@ -1,15 +1,15 @@
 {
   "name": "nodeAPI",
   "version": "1.0.0",
-  "description": "test programm",
+  "description": "A live google maps tracject",
   "main": "sample.js",
   "scripts": {
     "start": "node sample.js"
   },
   "author": "pbborel",
   "dependencies": {
+    "body-parser": "^1.13.3",
     "express": "^4.13.3",
-    "mongoose": "~3.6.13",
     "socket.io": "~0.9.6"
   },
   "engines": {
