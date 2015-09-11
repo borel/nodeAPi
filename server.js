@@ -33,10 +33,7 @@ router.get('/', function(req, res) {
       //add
       .post(function (req, res) {
          io.sockets.emit('message',{name: req.body.values.name, lat:  req.body.values.lat , long:  req.body.values.long});
-
-          // io.sockets.emit('message',{name: 'borel', lat: '45.720580' , long: '3.187303'});
-
-          res.send(200, 'Marker call');
+         res.send(200, 'Marker call');
       });
 
 

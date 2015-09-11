@@ -7,6 +7,7 @@
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmhelMVEXev83EyFPJhCJ1fYnQleKPfos&sensor=true"></script>
         <script type="text/javascript" src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="./jquery.min.js"></script>
+        <script type="text/javascript" src="./marathon.js"></script>
 
     	<script type="text/javascript">
             ////////////////////////////////////////////////////////////////////
@@ -16,25 +17,41 @@
 
             function mapInitialize() {
                 map = new google.maps.Map(document.getElementById("map-canvas"), {
-                    zoom: 5,
-                    center: new google.maps.LatLng(45.720580, 3.187303)
+                    zoom: 12,
+                    center: new google.maps.LatLng(40.742494, -73.953867)
                 });
                 infowindow = new google.maps.InfoWindow({ content: 'Test' });
                 google.maps.event.addListener(map, 'click', function() {
                     infowindow.close(map);
                 });
+
+                nycMarathonInitialize();
+            }
+
+
+            function nycMarathonInitialize(){
+                var nycMarathon = new google.maps.Polyline({
+                path: nycMarathonCoordinates,
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+              });
+
+                nycMarathon.setMap(map);
             }
 
             function addMarker(name,lat,long){
                 var marker = new google.maps.Marker({ map:map });
                 google.maps.event.addListener(marker, 'click', function() {
-                            infowindow.setContent(marker.getTitle())
+                            infowindow.setContent(marker.getTitle());
                             infowindow.open(map, marker);
                 });
 
                 //Move the markers
                 marker.setTitle(name);
                 marker.setPosition(new google.maps.LatLng(lat, long));
+                marker.setIcon('./img/LJ.png');
 
             }
 
@@ -55,8 +72,6 @@
             ////////////////////////////////////////////////////////////////////
             ////////////// Socket///////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////
-            //var socket = io.connect('http://localhost:8082');
-            //var socket = io.connect('http://guarded-sierra-2714.herokuapp.com:8082');
             var socket = io.connect('/');
 
             socket.on('message', function(data) {
