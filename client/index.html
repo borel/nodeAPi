@@ -41,7 +41,8 @@
                 nycMarathon.setMap(map);
             }
 
-            function addMarker(name,lat,long){
+
+            function addMarker(user,lat,long){
                 var marker = new google.maps.Marker({ map:map });
                 google.maps.event.addListener(marker, 'click', function() {
                             infowindow.setContent(marker.getTitle());
@@ -49,10 +50,12 @@
                 });
 
                 //Move the markers
-                marker.setTitle(name);
                 marker.setPosition(new google.maps.LatLng(lat, long));
-                marker.setIcon('./img/LJ.png');
-
+                if(user === 'lj'){
+                  marker.setIcon('./img/LJ.png')
+                }else{
+                  marker.setIcon('./img/ML.png')
+                }
             }
 
 
@@ -75,7 +78,7 @@
             var socket = io.connect('/');
 
             socket.on('message', function(data) {
-                addMarker(data.name,data.lat,data.long);
+                addMarker(data.user,data.lat,data.long);
             })
             ////////////////////////////////////////////////////////////////////
             ////////////// /Socket///////////////////////////////////////////////
@@ -93,11 +96,11 @@
     	</script>
 
         <style>
-            #map-canvas  { height: 100%; width:100%; }
+            #map-canvas  { height: 80%; width:80%}
             #user-number { font-size: 15px; font-weight: bold; font-color:black;}
         </style>
 
-        <p> Welcome to Smoozi tracker</p>
+        <p> Welcome to NYC marathon tracker</p>
         <div id="map-canvas"></div>
 
     </body>

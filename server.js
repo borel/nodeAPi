@@ -6,7 +6,6 @@ var bodyParser = require('body-parser');
 
 server.listen(process.env.PORT || 8082);
 
-
 //Chargement de la page index.html
 app.use(require('express').static(__dirname + '/client'));
 app.use(bodyParser.json()); // support json encoded bodies
@@ -29,39 +28,24 @@ router.get('/', function(req, res) {
     res.json({ message: 'hooray! welcome to our api!' });
 });
 
-  router.route('/geo/add')
+  router.route('/data/ml/add')
       //add
       .post(function (req, res) {
-         io.sockets.emit('message',{name: req.body.values.name, lat:  req.body.values.lat , long:  req.body.values.long});
+         io.sockets.emit('message',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:req.body.hr , hr:req.body.speed});
          res.send(200, 'Marker call');
       });
 
-
-  router.route('/geo/addSea')
-      // gel all user
-      .get(function (req, res) {
-          console.log(req);
-          io.sockets.emit('message',{name: 'human', lat: '4.32' , long: '172'});
-          res.send(200, 'Marker call');
-      });
+  router.route('/data/lj/add')
+      //add
+      .post(function (req, res) {
+         io.sockets.emit('message',{user:'lj' , lat:req.body.values.lat , long:req.body.values.long , hr:req.body.hr , hr:req.body.speed});
+         res.send(200, 'Marker call');
+  });
 
   app.use('/api', router);
   ///////////////////////////////
   // END ROUTING
   //////////////////////////////////
-
-io.sockets.on('connection', function (socket, pseudo) {
-    // Dès qu'on nous donne un pseudo, on le stocke en variable de session et on informe les autres personnes
-    socket.on('nouveau_client', function(pseudo) {
-        socket.pseudo = pseudo;
-        socket.broadcast.emit('nouveau_client', pseudo);
-    });
-
-    // Dès qu'on reçoit un message, on récupère le pseudo de son auteur et on le transmet aux autres personnes
-    socket.on('message', function (message) {
-        socket.broadcast.emit('message', {pseudo: socket.pseudo, message: message});
-    });
-});
 
 // For hosing on Heroku
 io.configure(function () {
