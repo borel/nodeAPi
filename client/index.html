@@ -14,6 +14,21 @@
             ////////////// GMAPS ///////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////
             var map = null;
+            var users = {};
+
+            function guid() {
+              function s4() { return Math.floor((1 + Math.random()) * 0x10000)
+                  .toString(16).substring(1);
+              };
+
+              return s4() + s4() + '-' + s4() + '-' + s4() + s4();
+          }
+
+
+            var userInfo = {
+                id: guid(),
+                name: 'Anonymous'
+            }
 
             function mapInitialize() {
                 map = new google.maps.Map(document.getElementById("map-canvas"), {
@@ -42,20 +57,40 @@
             }
 
 
-            function addMarker(user,lat,long){
-                var marker = new google.maps.Marker({ map:map });
-                google.maps.event.addListener(marker, 'click', function() {
-                            infowindow.setContent(marker.getTitle());
-                            infowindow.open(map, marker);
-                });
+            function updateMarker(name,lat,long){
 
-                //Move the markers
-                marker.setPosition(new google.maps.LatLng(lat, long));
-                if(user === 'lj'){
-                  marker.setIcon('./img/LJ.png')
-                }else{
-                  marker.setIcon('./img/ML.png')
-                }
+              // Take the user
+                    var userInformation = users[name];
+
+                    // si il n'esite pas on créait le marker et son user
+                      if(!userInformation){
+                        // New object of user info
+                        users[name] = userInfo;
+
+                        // affect to userInformation for update
+                        userInformation = users[name];
+
+                        // crearte the marker
+                        var marker = new google.maps.Marker({ map:map });
+                         google.maps.event.addListener(marker, 'click', function() {
+                                     infowindow.setContent(marker.getTitle());
+                                     infowindow.open(map, marker);
+                         });
+
+                         // Img management
+                         if(name === 'lj'){
+                           marker.setIcon('./img/LJ.png')
+                         }else{
+                           marker.setIcon('./img/ML.png')
+                         }
+
+                         //affect the marker
+                         userInformation.marker = marker;
+                      }
+
+                //On update le marker ( qu(il soit nouveau ou ancien))
+                userInformation.marker.setPosition(new google.maps.LatLng(lat, long));
+
             }
 
 
@@ -63,13 +98,7 @@
             ////////////// /GMAPS ///////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////
 
-            ////////////////////////////////////////////////////////////////////
-            ////////////// Chat ///////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////////////
 
-            ////////////////////////////////////////////////////////////////////
-            ////////////// /Chat ///////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////////////
 
 
             ////////////////////////////////////////////////////////////////////
@@ -78,7 +107,7 @@
             var socket = io.connect('/');
 
             socket.on('message', function(data) {
-                addMarker(data.user,data.lat,data.long);
+                updateMarker(data.user,data.lat,data.long);
             })
             ////////////////////////////////////////////////////////////////////
             ////////////// /Socket///////////////////////////////////////////////
