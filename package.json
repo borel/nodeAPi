@@ -4,7 +4,7 @@
   "description": "A live google maps tracject",
   "main": "sample.js",
   "scripts": {
-    "start": "node sample.js"
+    "start": "node server.js"
   },
   "author": "pbborel",
   "dependencies": {

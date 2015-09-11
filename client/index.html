@@ -55,7 +55,9 @@
             ////////////////////////////////////////////////////////////////////
             ////////////// Socket///////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////
-            var socket = io.connect('http://localhost:8082');
+            //var socket = io.connect('http://localhost:8082');
+
+            var socket = io.connect('http://guarded-sierra-2714.herokuapp.com:8082');
 
             socket.on('message', function(data) {
                 addMarker(data.name,data.lat,data.long);
