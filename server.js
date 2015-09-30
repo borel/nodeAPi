@@ -43,9 +43,9 @@ router.get('/', function(req, res) {
       .post(function (req, res) {
          io.sockets.emit('message',{user:'lj' , lat:req.body.values.lat , long:req.body.values.long , hr:req.body.hr , hr:req.body.speed});
          console.log('Jalabert:Lat');
-         console.log(lat:req.body.values.lat);
+         console.log(req.body.values.lat);
          console.log('Jalabert:Long');
-         console.log(long:req.body.values.long );
+         console.log(req.body.values.long );
          res.send(200, 'Marker call');
   });
 
