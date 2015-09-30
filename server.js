@@ -19,7 +19,6 @@ var router = express.Router();              // get an instance of the express Ro
 // middleware to use for all requests
 router.use(function(req, res, next) {
     // do logging
-    console.log('Something is happening.');
     next(); // make sure we go to the next routes and don't stop here
 });
 
@@ -32,6 +31,10 @@ router.get('/', function(req, res) {
       //add
       .post(function (req, res) {
          io.sockets.emit('message',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:req.body.hr , hr:req.body.speed});
+         console.log('Landreau:Lat');
+         console.log(lat:req.body.values.lat);
+         console.log('Landreau:Long');
+         console.log(long:req.body.values.long );
          res.send(200, 'Marker call');
       });
 
@@ -39,6 +42,10 @@ router.get('/', function(req, res) {
       //add
       .post(function (req, res) {
          io.sockets.emit('message',{user:'lj' , lat:req.body.values.lat , long:req.body.values.long , hr:req.body.hr , hr:req.body.speed});
+         console.log('Jalabert:Lat');
+         console.log(lat:req.body.values.lat);
+         console.log('Jalabert:Long');
+         console.log(long:req.body.values.long );
          res.send(200, 'Marker call');
   });
 
