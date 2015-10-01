@@ -27,21 +27,21 @@ router.get('/', function(req, res) {
     res.json({ message: 'hooray! welcome to our api!' });
 });
 
-  router.route('/data/ml/add')
+router.route('/data/ml/add')
       //add
       .post(function (req, res) {
          io.sockets.emit('message',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:req.body.values.hr , speed:req.body.values.speed ,distance:req.body.values.distance});
          res.send(200, 'Marker call');
       });
 
-  router.route('/data/lj/add')
+router.route('/data/lj/add')
       //add
       .post(function (req, res) {
          io.sockets.emit('message',{user:'lj' , lat:req.body.values.lat , long:req.body.values.long , hr:req.body.values.hr , speed:req.body.values.speed ,distance:req.body.values.distance});
          res.send(200, 'Marker call');
   });
 
-  app.use('/api', router);
+app.use('/api', router);
   ///////////////////////////////
   // END ROUTING
   //////////////////////////////////
