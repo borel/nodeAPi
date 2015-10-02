@@ -104,7 +104,7 @@
 
               }
 
-              function updateIndicator(name,hr,distance,speed){
+              function updateIndicator(name,hr,speed,distance){
                 if(name === 'lj'){
                   document.getElementById("lj_hr").textContent = hr;
                   document.getElementById("lj_speed").textContent = speed;
@@ -132,7 +132,7 @@
 
               socket.on('message', function(data) {
                   updateMarker(data.user,data.lat,data.long);
-                  updateIndicator(data.user,data.hr,data.distance,data.speed);
+                  updateIndicator(data.user,data.hr,data.speed,data.distance);
 
               })
               ////////////////////////////////////////////////////////////////////
