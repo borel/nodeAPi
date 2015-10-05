@@ -30,14 +30,14 @@ router.get('/', function(req, res) {
 router.route('/data/ml/add')
       //add
       .post(function (req, res) {
-         io.sockets.emit('message',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:req.body.values.hr , speed:req.body.values.speed ,distance:req.body.values.distance});
+         io.sockets.emit('message',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:req.body.values.hr , speed:req.body.values.speed * 3.6,distance:req.body.values.distance});
          res.send(200, 'Marker call');
       });
 
 router.route('/data/lj/add')
       //add
       .post(function (req, res) {
-         io.sockets.emit('message',{user:'lj' , lat:req.body.values.lat , long:req.body.values.long , hr:req.body.values.hr , speed:req.body.values.speed ,distance:req.body.values.distance});
+         io.sockets.emit('message',{user:'lj' , lat:req.body.values.lat , long:req.body.values.long , hr:req.body.values.hr , speed:req.body.values.speed * 3.6,distance:req.body.values.distance});
          res.send(200, 'Marker call');
   });
 
