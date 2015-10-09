@@ -52,7 +52,7 @@ router.route('/data/marker/lj/add')
         //add
         .post(function (req, res) {
           // store the tk
-          tk_jalabert.push(tk);
+      //    tk_jalabert.push(tk);
 
           // emit the socket
           io.sockets.emit('add_pk',{user:'ml' ,tk:req.body.values.tk,nb_k:req.body.values.nb_k});
@@ -63,7 +63,7 @@ router.route('/data/marker/lj/add')
         //add
         .post(function (req, res) {
           // store the tk
-          tk_landreau.push(tk);
+        //  tk_landreau.push(tk);
 
           io.sockets.emit('add_pk',{user:'lj' , tk:req.body.values.tk,nb_k:req.body.values.nb_k});
           res.send(200, 'Tk call');
