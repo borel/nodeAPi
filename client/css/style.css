@@ -1,49 +1,57 @@
 #top {
-	margin: 20px 20px 0px 20px;
 	padding: 10px;
-	border: 5px ;
-	height: 100px; /* ie5win fudge begins */
+	border: 5px solid #ccc;
+	height: 8%; /* ie5win fudge begins */
 	voice-family: "\"}\"";
 	voice-family:inherit;
-	height: 70px;
+	height: 8%;
 	}
 html>body #top {
-	height: 70px; /* ie5win fudge ends */
+	height: 8%; /* ie5win fudge ends */
 	}
 #left {
 	position: absolute;
-	top: 120px;
+	top: 20%;
 	left: 0px;
-	margin: 20px;
 	padding: 10px;
-	border: 5px;
-	width: 300px; /* ie5win fudge begins */
+	border: 5px solid #cce;
+	width: 20%; /* ie5win fudge begins */
 	voice-family: "\"}\"";
 	voice-family:inherit;
-	width: 300px;
+	width: 20%;
 	}
 html>body #left {
-	width: 300px; /* ie5win fudge ends */
+	width: 20%; /* ie5win fudge ends */
 	}
-#middle {
-	margin: 20px 400px 20px 400px;
+/*#middle {
+		 	top: 10%;
+ 	height: 80%;
+ 	width:60%
 	padding: 10px;
-	border: 5px ;
-	}
+	border: 5px solid #ccb;
+	}*/
 #right {
 	position: absolute;
-	top: 120px;
-	right: 0px; /* Opera5.02 will show a space at right when there is no scroll bar */
-	margin: 20px;
+	top: 20%;
 	padding: 10px;
-	border: 5px ;
-	width: 300px; /* ie5win fudge begins */
+	right: 0px; /* Opera5.02 will show a space at right when there is no scroll bar */
+	border: 5px solid #cca;
+	width: 20%; /* ie5win fudge begins */
 	voice-family: "\"}\"";
 	voice-family:inherit;
-	width: 300px;
+	width: 20%;
 	}
 html>body #right {
-	width: 300px; /* ie5win fudge ends */
+	width: 20%; /* ie5win fudge ends */
 	}
 
- #map-canvas  { height: 60%; width:100%}
+ #map-canvas  {
+	 	position: absolute;
+		padding: 10px;
+	 	top: 20%;
+	  margin:20%;
+		height: 60%;
+		width:50% ;
+		border: 5px solid #ccd;
+
+	}

@@ -14,8 +14,9 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 /////////////////////////////////////
 /// Functionnal var
-var tk_jalabert = [];
-var tk_landreau = [];
+
+// array to store data
+var tks = new Array();
 
 
 ////////////////////////////////////////
@@ -52,20 +53,22 @@ router.route('/data/marker/lj/add')
         //add
         .post(function (req, res) {
           // store the tk
-      //    tk_jalabert.push(tk);
+          addPK('ml',req.body.values.tk,req.body.values.distance);
 
           // emit the socket
-          io.sockets.emit('add_pk',{user:'ml' ,tk:req.body.values.tk,nb_k:req.body.values.nb_k});
+          io.sockets.emit('add_pk',{user:'ml' ,tk:req.body.values.tk});
           res.send(200, 'Tk call');
         });
 
   router.route('/data/tk/lj/add')
         //add
         .post(function (req, res) {
-          // store the tk
-        //  tk_landreau.push(tk);
 
-          io.sockets.emit('add_pk',{user:'lj' , tk:req.body.values.tk,nb_k:req.body.values.nb_k});
+          // store the tk
+          addPK('lj',req.body.values.tk,req.body.values.distance);
+
+          // emit the socket
+          io.sockets.emit('add_pk',{user:'lj' , tk:req.body.values.tk});
           res.send(200, 'Tk call');
     });
 
@@ -73,6 +76,60 @@ app.use('/api', router);
   ///////////////////////////////
   // END ROUTING
   //////////////////////////////////
+
+  ///////////////////////////////
+  // Data managemet
+  //////////////////////////////////
+  function addPK(user,tk,distance) {
+
+    dist = Math.round(distance/1000);
+
+    if(tks[dist] === null){
+      tk = Array(dist,tk,tk);
+      tks.push(tk);
+    }
+
+
+    //tks.push(Array('3','3.3','2.9'));
+
+
+
+      //
+      // tk = new Array();
+      //
+      // if(user === 'lj'){
+      //   if(tks[distance] === null){
+      //       tk(distance,tk,tk)
+      //   }else{
+      //       tk(distance,tk,tk)
+      //   }
+      //
+      // }else{
+      //   if(tks[distance] === null){
+      //      tk(distance,tk,tk)
+      //   }else{
+      //       tk(distance,tk,tk)
+      //   }
+      // }
+
+
+      // tks = Array(
+      //     Array('1','5.3','2.1'),
+      //     Array('2','5.6','2.8'),
+      //     Array('3','5.1','2.4'),
+      //     Array('4','4.3','4.1')
+      // );
+
+  }
+
+  ///////////////////////////////
+  // END ROUTING
+  //////////////////////////////////
+
+  // Quand on client se connecte, on renseigne le graph
+  io.sockets.on('connection', function (socket) {
+    io.sockets.emit('init_pk',{tks:tks});
+  });
 
 // For hosing on Heroku
 io.configure(function () {

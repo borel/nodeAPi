@@ -29,7 +29,14 @@
               ////////////// GMAPS ///////////////////////////////////////////////
               ////////////////////////////////////////////////////////////////////
               var map = null;
+
+              // tab of user information
               var users = {};
+
+              var userInfo = {
+                  id: UserInfo(),
+              }
+
 
               function guid() {
                 function s4() { return Math.floor((1 + Math.random()) * 0x10000)
@@ -39,10 +46,12 @@
                 return s4() + s4() + '-' + s4() + '-' + s4() + s4();
             }
 
+             function UserInfo(name){
 
-              var userInfo = {
-                  id: guid(),
-                  name: 'Anonymous'
+               var userInfo = {
+                   id: name,
+               }
+
               }
 
               function mapInitialize() {
@@ -81,7 +90,7 @@
                       // si il n'esite pas on créait le marker et son user
                         if(!userInformation){
                           // New object of user info
-                          users[name] = userInfo;
+                          users[name] = UserInfo(name);
 
                           // affect to userInformation for update
                           userInformation = users[name];
@@ -130,9 +139,6 @@
               ////////////////////////////////////////////////////////////////////
               ////////////// /Graph ///////////////////////////////////////////////
               ////////////////////////////////////////////////////////////////////
-              var tkLandreau = [];
-              var tkJalabert = [];
-
               var data = {
                   labels: [
                           ],
@@ -143,7 +149,7 @@
                           strokeColor: "rgba(220,220,220,0.8)",
                           highlightFill: "rgba(220,220,220,0.75)",
                           highlightStroke: "rgba(220,220,220,1)",
-                          data: tkJalabert
+                          data: []
                       },
                       {
                           label: "Landreau",
@@ -151,17 +157,12 @@
                           strokeColor: "rgba(151,187,205,0.8)",
                           highlightFill: "rgba(151,187,205,0.75)",
                           highlightStroke: "rgba(151,187,205,1)",
-                          data: tkLandreau
+                          data: []
                       }
                   ]
               };
 
               function updateGraph(name,tk){
-                if(name === 'lj'){
-                  tkJalabert.push(tk);
-                }else{
-                  tkLandreau.push(tk);
-                }
                 window.myBar.addData([tk, tk], "1k");
                 window.myBar.update();
               }
@@ -184,6 +185,12 @@
               socket.on('add_pk', function(data) {
                   updateGraph(data.user,data.tk);
               })
+
+              socket.on('init_pk', function(data) {
+                for (index = 0; index < data.tks.length; ++index) {
+                  window.myBar.addData([data.tks[index][1],data.tks[index][2]], data.tks[index][0]);
+                }
+              })
               ////////////////////////////////////////////////////////////////////
               ////////////// /Socket///////////////////////////////////////////////
               ////////////////////////////////////////////////////////////////////
@@ -194,11 +201,11 @@
               google.maps.event.addDomListener(window, 'load', mapInitialize);
 
               window.onload = function(){
-            		var ctx = document.getElementById("bar_tab").getContext("2d");
-            		window.myBar = new Chart(ctx).Line(data, {
-            			responsive : true,
+                var ctx = document.getElementById("bar_tab").getContext("2d");
+                window.myBar = new Chart(ctx).Line(data, {
+                   responsive : true,
                    bezierCurve: true
-            		});
+                });
             	}
 
               ////////////////////////////////////////////////////////////////////
@@ -221,9 +228,9 @@
         </table>
     </div>
 
-    <div id="middle">
-        <div id="map-canvas"></div>
-    </div>
+
+    <div id="map-canvas"></div>
+
 
     <div id="right">
         <table>
@@ -233,8 +240,8 @@
             <tr> <div id="lj_speed">-</div></tr>
         </table>
     </div>
-    <div id="middle">
+
       <canvas id="bar_tab" height="100" width="200"></canvas>
-    </div>
+
     </body>
 </html>
