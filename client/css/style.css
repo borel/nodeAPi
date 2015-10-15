@@ -280,7 +280,7 @@ Wide styles
 /*** My CSS ***/
 #map-canvas  {
 	position: relative;
-        padding-bottom: 75%; // This is the aspect ratio
+        padding-bottom: 80%; // This is the aspect ratio
         height: 0;
         overflow: hidden;
 	}

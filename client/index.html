@@ -130,9 +130,9 @@
 
       // if there is already 10 value , we delete the first value
       if(countLJ > 10){
-          window.tabHrLj.removeData();
-          window.tabSpeedLj.removeData();
-          window.tabDistLj.removeData();
+        window.tabHrLj.removeData();
+        window.tabSpeedLj.removeData();
+        window.tabDistLj.removeData();
       }
       //
       window.tabHrLj.update();
@@ -153,9 +153,9 @@
 
       // if there is already 10 value , we delete the first value
       if(countML > 10){
-          window.tabHrMl.removeData();
-          window.tabSpeedMl.removeData();
-          window.tabDistMl.removeData();
+        window.tabHrMl.removeData();
+        window.tabSpeedMl.removeData();
+        window.tabDistMl.removeData();
       }
       //
       window.tabSpeedMl.update();
@@ -226,7 +226,6 @@
     window.tabHrMl = new Chart(ctx).Line(data, {
       responsive : true,
       bezierCurve: true,
-      showTooltips: false,
       scaleLineColor: "rgba(204, 44, 44, 0.9)",
     });
 
@@ -234,7 +233,6 @@
     window.tabSpeedMl = new Chart(ctx).Line(data, {
       responsive : true,
       bezierCurve: true,
-      showTooltips: false,
       scaleLineColor: "rgba(204, 44, 44, 0.9)",
     });
 
@@ -242,8 +240,6 @@
     window.tabDistMl = new Chart(ctx).Line(data, {
       responsive : true,
       bezierCurve: true,
-      showTooltips: false,
-
       scaleLineColor: "rgba(204, 44, 44, 0.9)",
     });
 
@@ -252,7 +248,6 @@
     window.tabHrLj = new Chart(ctx).Line(data, {
       responsive : true,
       bezierCurve: true,
-      showTooltips: false,
       scaleLineColor: "rgba(204, 44, 44, 0.9)",
     });
 
@@ -260,7 +255,6 @@
     window.tabSpeedLj = new Chart(ctx).Line(data, {
       responsive : true,
       bezierCurve: true,
-      showTooltips: false,
       scaleLineColor: "rgba(204, 44, 44, 0.9)",
     });
 
@@ -268,7 +262,6 @@
     window.tabDistLj = new Chart(ctx).Line(data, {
       responsive : true,
       bezierCurve: true,
-      showTooltips: false,
       scaleLineColor: "rgba(204, 44, 44, 0.9)",
     });
 
@@ -300,58 +293,207 @@
         <!-- Responsive images -->
         <p><div id="map-canvas"></div></p>
 
-        <a class="twitter-timeline" href="https://twitter.com/wurstcraftsman" data-widget-id="654673309544480768">Tweets by @wurstcraftsman</a>
+        <p><div id="tc_810"><a title="NYC Marathon" href="http://www.tickcounter.com/countup/20151015120000am/w422/NYC_Marathon">NYC Marathon</a> <a title="Countup online" href="http://www.tickcounter.com">Countup</a></div><script type="text/javascript">(function(){var s = document.createElement("script");s.src = "http://www.tickcounter.com/widget/countup/20151015120000am/w422/810/0/000000fffcff757a85/NYC_Marathon";s.async = "async";s.type = "text/javascript";var x = document.getElementById("tc_810");x.insertBefore(s,x.lastChild);}());</script></p>
+
+        <p><a style=" margin-left: auto; margin-right: auto;}" class="twitter-timeline" href="https://twitter.com/wurstcraftsman" data-widget-id="654673309544480768">Tweets by @wurstcraftsman</a></p>
+
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
-    <p></p>
-        <!-- Tables -->
-        <h3>Resumé</h3>
 
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Km</th>
-              <th>Chrono</th>
-              <th>Temps pour réaliser le km</th>
-              <th>Vitesse moy</th>
-              <th>Allure moy</th>
-              <th>FC moy</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">2</th>
-              <td>5'12</td>
-              <td>5'12</td>
-              <td>12.5</td>
-              <td>5'12</td>
-              <td>112</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>4'32</td>
-              <td>4'32</td>
-              <td>15.5</td>
-              <td>4'32</td>
-              <td>136</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
       <div class="col2">
         <h3>Landreau</h3>
         <p><canvas id="tab_hr_ml"></p>
           <p><canvas id="tab_dist_ml"></p>
             <p><canvas id="tab_speed_ml"></p>
-            </div>
-            <div class="col3">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Km</th>
+                    <th>Chrono</th>
+                    <th>Temps pour réaliser le km</th>
+                    <th>Vitesse moy</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>5'12</td>
+                    <td>5'12</td>
+                    <td>12.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>4'32</td>
+                    <td>4'32</td>
+                    <td>15.5</td>
+                  </tr>
+                </tbody>
+              </table>
+      </div>
+
+      <div class="col3">
               <h3>Jalabert</h3>
               <p><canvas id="tab_hr_lj"></p>
                 <p><canvas id="tab_dist_lj"></p>
                   <p><canvas id="tab_speed_lj"></p>
-                  </div>
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>Km</th>
+                          <th>Chrono</th>
+                          <th>Temps pour réaliser le km</th>
+                          <th>Vitesse moy</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">2</th>
+                          <td>5'12</td>
+                          <td>5'12</td>
+                          <td>12.5</td>
+
+                        </tr>
+                        <tr>
+                          <th scope="row">3</th>
+                          <td>4'32</td>
+                          <td>4'32</td>
+                          <td>15.5</td>
+
+                        </tr>
+                      </tbody>
+                    </table>
+      </div>
                 </div>
               </div>
+
+
               <div class="footer">
                 <div class="container">
                   &copy; Copyright 2015 - Smoozy
