@@ -133,13 +133,12 @@
                   document.getElementById("lj_speed").textContent = speed;
                   document.getElementById("lj_distance").textContent = distance;
 
-                  window.tabHrLj.addData([hr], "1k");
+                  window.tabHrLj.addData([hr], "lj");
+                  window.tabSpeedLj.addData([speed], "lj");
+                  window.tabDistLj.addData([distance], "lj");
+
                   window.tabHrLj.update();
-
-                  window.tabSpeedLj.addData([speed], "1k");
                   window.tabSpeedLj.update();
-
-                  window.tabDistLj.addData([distance], "1k");
                   window.tabDistLj.update();
 
                 }else{
@@ -147,13 +146,12 @@
                   document.getElementById("ml_speed").textContent = speed;
                   document.getElementById("ml_distance").textContent = distance;
 
-                  window.tabHrMl.addData([hr], "");
-                  window.tabHrMl.update();
+                  window.tabHrMl.addData([hr], "ml");
+                  window.tabSpeedMl.addData([speed], "ml");
+                  window.tabDistMl.addData([distance], "ml");
 
-                  window.tabSpeedMl.addData([speed], "");
                   window.tabSpeedMl.update();
-
-                  window.tabDistMl.addData([distance], "");
+                  window.tabHrMl.update();
                   window.tabDistMl.update();
                 }
 
@@ -319,7 +317,7 @@
 
    <div id="graph_canvas_lj">
      <table>
-         <tr> <td colspan="2" align="center"><img src="/img/LJ.png" alt="Smiley face" </td></tr>
+         <tr> <td colspan="2" align="center"><img height="5%" width="5%" src="/img/LJ.png" alt="Smiley face" </td></tr>
          <tr> <td>hr</td><td><canvas id="tab_hr_lj"></canvas>  </td></tr>
          <tr> <td>dist</td><td><canvas id="tab_dist_lj"></canvas>  </td></tr>
          <tr> <td>speed</td><td><canvas id="tab_speed_lj"></canvas>  </td></tr>
@@ -328,7 +326,7 @@
 
    <div id="graph_canvas_ml">
      <table>
-         <tr> <td colspan="2" align="center"><img src="/img/ML.png" alt="Smiley face" </td></tr>
+         <tr> <td colspan="2" align="center"><img height="5%" width="5%" src="/img/ML.png" alt="Smiley face" </td></tr>
          <tr> <td>hr</td><td><canvas id="tab_hr_ml"></canvas>  </td></tr>
          <tr> <td>dist</td><td><canvas id="tab_dist_ml"></canvas>  </td></tr>
          <tr> <td>speed</td><td><canvas id="tab_speed_ml"></canvas>  </td></tr>
