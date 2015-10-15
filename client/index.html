@@ -39,6 +39,8 @@
   ////////////// GMAPS ///////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////
   var map = null;
+  var countLJ = null;
+  var countML = null;
 
   // tab of user information
   var users = {};
@@ -98,9 +100,9 @@
 
     // Img management
     if(name === 'lj'){
-      marker.setIcon('./img/LJ.png')
+      //marker.setIcon('./img/LJ.png')
     }else{
-      marker.setIcon('./img/ML.png')
+      //marker.setIcon('./img/ML.png')
     }
 
     // affect set marker
@@ -112,8 +114,12 @@
 
 
   function updateIndicator(name,hr,speed,distance){
-    
+
     if(name === 'lj'){
+
+      // incrmeent the display token
+      countLJ++;
+
       // document.getElementById("lj_hr").textContent = hr;
       // document.getElementById("lj_speed").textContent = speed;
       // document.getElementById("lj_distance").textContent = distance;
@@ -121,12 +127,22 @@
       window.tabHrLj.addData([hr], "");
       window.tabSpeedLj.addData([speed], "");
       window.tabDistLj.addData([distance], "");
+
+      // if there is already 10 value , we delete the first value
+      if(countLJ > 10){
+          window.tabHrLj.removeData();
+          window.tabSpeedLj.removeData();
+          window.tabDistLj.removeData();
+      }
       //
       window.tabHrLj.update();
       window.tabSpeedLj.update();
       window.tabDistLj.update();
 
     }else{
+      // incrmeent the display token
+      countML++;
+
       // document.getElementById("ml_hr").textContent = hr;
       // document.getElementById("ml_speed").textContent = speed;
       // document.getElementById("ml_distance").textContent = distance;
@@ -134,6 +150,13 @@
       window.tabHrMl.addData([hr], "");
       window.tabSpeedMl.addData([speed], "");
       window.tabDistMl.addData([distance], "");
+
+      // if there is already 10 value , we delete the first value
+      if(countML > 10){
+          window.tabHrMl.removeData();
+          window.tabSpeedMl.removeData();
+          window.tabDistMl.removeData();
+      }
       //
       window.tabSpeedMl.update();
       window.tabHrMl.update();

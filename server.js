@@ -75,7 +75,6 @@ router.route('/data/marker/lj/add')
     router.route('/test')
       //add
       .post(function (req, res) {
-          io.sockets.emit('add_marker',{user:'lj' , lat:req.body.values.lat , long:req.body.values.long , hr:req.body.values.hr , speed:req.body.values.speed * 3.6,distance:req.body.values.distance});
           var dist = 0;
           setInterval(function() {
             sendDataTest(req,dist);
@@ -103,11 +102,11 @@ app.use('/api', router);
      var speedLj = 5 + (Math.random() * 1);
      var speedMl = 4 + (Math.random() * 1);
 
-     var longMl = 4.953425025939941;
-     var latMl = 45.759;
+     var longMl = 4.953425025939941 + (Math.random() / 100);
+     var latMl = 45.759 + (Math.random() / 100);
 
-     var longLj = 4.953425025939941;
-     var latLj = 45.759;
+     var longLj = 4.953425025939941+ (Math.random() / 100);
+     var latLj = 45.759 + (Math.random() / 100);
 
 
      io.sockets.emit('add_marker',{user:'lj' , lat:latLj , long:longLj , hr:hrLj, speed:speedLj  ,distance:dist});
