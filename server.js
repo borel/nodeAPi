@@ -80,7 +80,7 @@ router.route('/data/marker/lj/add')
           setInterval(function() {
             sendDataTest(req,dist);
             dist = dist + 2;
-          }, 2000);
+          }, 5000);
 
           res.send(200, 'API TEST CALLING');
       });
@@ -103,11 +103,11 @@ app.use('/api', router);
      var speedLj = 5 + (Math.random() * 1);
      var speedMl = 4 + (Math.random() * 1);
 
-     var longMl = 4.953425025939941 + Math.random() /10;
-     var latMl = 45.759 + Math.random() /10;
+     var longMl = 4.953425025939941;
+     var latMl = 45.759;
 
-     var longLj = 4.953425025939941 + Math.random() /10;
-     var latLj = 45.759 + Math.random() /10;
+     var longLj = 4.953425025939941;
+     var latLj = 45.759;
 
 
      io.sockets.emit('add_marker',{user:'lj' , lat:latLj , long:longLj , hr:hrLj, speed:speedLj  ,distance:dist});
