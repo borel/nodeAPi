@@ -1,17 +1,17 @@
 #top {
 	padding: 10px;
 	/*border: 5px solid #ccc;*/
-	height: 8%; /* ie5win fudge begins */
+	height: 2%; /* ie5win fudge begins */
 	voice-family: "\"}\"";
 	voice-family:inherit;
-	height: 8%;
+	height: 2%;
 	}
 html>body #top {
-	height: 8%; /* ie5win fudge ends */
+	height: 2%; /* ie5win fudge ends */
 	}
 #left {
 	position: absolute;
-	top: 20%;
+	top: 10%;
 	left: 0px;
 	padding: 10px;
 	/*border: 5px solid #cce;*/
@@ -24,7 +24,7 @@ html>body #left {
 	}
 #middle {
 			position: absolute;
-			top: 20%;
+			top: 10%;
 			padding: 10px;
 			left: 15%; /* Opera5.02 will show a space at right when there is no scroll bar */
 			border: 5px solid #cca;
@@ -35,7 +35,7 @@ html>body #left {
 	}
 #right {
 	position: absolute;
-	top: 20%;
+	top: 10%;
 	padding: 10px;
 	right: 0px; /* Opera5.02 will show a space at right when there is no scroll bar */
 	/*border: 5px solid #cca;*/
@@ -49,7 +49,7 @@ html>body #right {
 
  #map-canvas  {
 	 	position: absolute;
-		top: 20%;
+		top: 10%;
 		padding: 10px;
 		left: 15%; /* Opera5.02 will show a space at right when there is no scroll bar */
 		right: 15%; /* Opera5.02 will show a space at right when there is no scroll bar */
@@ -62,14 +62,14 @@ html>body #right {
 
 	#graph_canvas_lj  {
 		position: absolute;
- 		top: 70%;
+ 		top: 60%;
  		padding: 10px;
  		left: 55%;
  	}
 
 	#graph_canvas_ml  {
  	 	position: absolute;
- 		top: 70%;
+ 		top: 60%;
  		padding: 10px;
  		left: 15%;
  	}
