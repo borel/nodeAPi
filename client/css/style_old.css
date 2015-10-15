@@ -1,0 +1,77 @@
+#top {
+	padding: 10px;
+	/*border: 5px solid #ccc;*/
+	height: 2%; /* ie5win fudge begins */
+	voice-family: "\"}\"";
+	voice-family:inherit;
+	height: 2%;
+	}
+html>body #top {
+	height: 2%; /* ie5win fudge ends */
+	}
+#left {
+	position: absolute;
+	top: 10%;
+	left: 0px;
+	padding: 10px;
+	/*border: 5px solid #cce;*/
+	width: 10%; /* ie5win fudge begins */
+		 z-index: 1;
+	voice-family: "\"}\"";
+	voice-family:inherit;
+	}
+html>body #left {
+	width: 10%; /* ie5win fudge ends */
+	}
+#middle {
+			position: absolute;
+			top: 10%;
+			padding: 10px;
+			left: 15%; /* Opera5.02 will show a space at right when there is no scroll bar */
+			border: 5px solid #cca;
+			width: 70%;
+			/*border: 5px solid #ccb;*/
+			voice-family: "\"}\"";
+			voice-family:inherit;
+	}
+#right {
+	position: absolute;
+	top: 10%;
+	padding: 10px;
+	right: 0px; /* Opera5.02 will show a space at right when there is no scroll bar */
+	/*border: 5px solid #cca;*/
+	width: 10%;
+		 z-index: 1;
+	voice-family: "\"}\"";
+	voice-family:inherit;
+	}
+html>body #right {
+	width: 10%;
+	}
+
+	#map-canvas  {
+		 	position: absolute;
+			padding: 10px;
+		 	top: 10%;
+		  margin:20%;
+			height: 60%;
+			width:50% ;
+		}
+
+	#graph_canvas_lj  {
+		position: absolute;
+ 		top: 60%;
+ 		padding: 10px;
+ 		left: 55%;
+		 opacity: .45; /* Set the opacity for a slightly transparent Google Form */
+		 z-index: 1;
+ 	}
+
+	#graph_canvas_ml  {
+ 	 	position: absolute;
+ 		top: 60%;
+ 		padding: 10px;
+ 		left: 15%;
+		 opacity: .45; /* Set the opacity for a slightly transparent Google Form */
+		 z-index: 1;
+ 	}

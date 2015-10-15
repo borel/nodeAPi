@@ -1,340 +1,337 @@
 <html>
-    <head>
-        <title>Smoozi Tracker</title>
-        <link rel="stylesheet" type="text/css" href="./css/style.css" />
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmhelMVEXev83EyFPJhCJ1fYnQleKPfos&sensor=true"></script>
-        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-        <script type="text/javascript" src="./js/marathon_value.js"></script>
-        <script type="text/javascript" src="./js/chart.js"></script>
-
-
-
-    </head>
-    <body>
-
-
-        <script>
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-          ga('create', 'UA-57925881-11', 'auto');
-          ga('send', 'pageview');
-
-        </script>
-
-      	<script type="text/javascript">
-              ////////////////////////////////////////////////////////////////////
-              ////////////// GMAPS ///////////////////////////////////////////////
-              ////////////////////////////////////////////////////////////////////
-              var map = null;
-
-              // tab of user information
-              var users = {};
-
-              var userInfo = {
-                  id: UserInfo(),
-              }
-
-
-              function guid() {
-                function s4() { return Math.floor((1 + Math.random()) * 0x10000)
-                    .toString(16).substring(1);
-                };
-
-                return s4() + s4() + '-' + s4() + '-' + s4() + s4();
-            }
-
-             function UserInfo(name){
-
-               var userInfo = {
-                   id: name,
-               }
-
-              }
-
-              function mapInitialize() {
-                  map = new google.maps.Map(document.getElementById("map-canvas"), {
-                      zoom: 12,
-                      // nyc   center: new google.maps.LatLng(40.742494, -73.953867)
-                      center: new google.maps.LatLng(45.764043, 4.835659)
-                  });
-                  infowindow = new google.maps.InfoWindow({ content: 'Test' });
-                  google.maps.event.addListener(map, 'click', function() {
-                      infowindow.close(map);
-                  });
-
-                  nycMarathonInitialize();
-              }
-
-
-              function nycMarathonInitialize(){
-                  var nycMarathon = new google.maps.Polyline({
-                  path: nycMarathonCoordinates,
-                  geodesic: true,
-                  strokeColor: '#FF0000',
-                  strokeOpacity: 1.0,
-                  strokeWeight: 2
-                });
-
-                  nycMarathon.setMap(map);
-              }
-
-
-              function updateMarker(name,lat,long){
-
-                // Take the user
-                var user = users[name];
-
-              // si il n'esite pas on créait le marker et son user
-                        if(!user){
-                          user = createUser(name);
-                          users[name] = user;
-                        }
-
-                  //On update le marker ( qu(il soit nouveau ou ancien))
-                  user.marker.setPosition(new google.maps.LatLng(lat, long));
-
-              }
-
-              function createUser(name){
-
-                 var user = new Object();
-
-                //affect the name
-                 user.name = name;
-
-                  // crearte the marker
-                  var marker = new google.maps.Marker({ map:map });
-                   google.maps.event.addListener(marker, 'click', function() {
-                               infowindow.setContent(marker.getTitle());
-                               infowindow.open(map, marker);
-                   });
-
-                   // Img management
-                   if(name === 'lj'){
-                     marker.setIcon('./img/LJ.png')
-                   }else{
-                     marker.setIcon('./img/ML.png')
-                   }
-
-                   // affect set marker
-                   user.marker = marker;
-
-                   return user;
-              }
-
-
-
-                function updateIndicator(name,hr,speed,distance){
-                  if(name === 'lj'){
-                  document.getElementById("lj_hr").textContent = hr;
-                  document.getElementById("lj_speed").textContent = speed;
-                  document.getElementById("lj_distance").textContent = distance;
-
-                  window.tabHrLj.addData([hr], "");
-                  window.tabSpeedLj.addData([speed], "");
-                  window.tabDistLj.addData([distance], "");
-
-                  window.tabHrLj.update();
-                  window.tabSpeedLj.update();
-                  window.tabDistLj.update();
-
-                }else{
-                  document.getElementById("ml_hr").textContent = hr;
-                  document.getElementById("ml_speed").textContent = speed;
-                  document.getElementById("ml_distance").textContent = distance;
-
-                  window.tabHrMl.addData([hr], "");
-                  window.tabSpeedMl.addData([speed], "");
-                  window.tabDistMl.addData([distance], "");
-
-                  window.tabSpeedMl.update();
-                  window.tabHrMl.update();
-                  window.tabDistMl.update();
-                }
-
-
-              }
-
-
-              ////////////////////////////////////////////////////////////////////
-              ////////////// /GMAPS ///////////////////////////////////////////////
-              ////////////////////////////////////////////////////////////////////
-
-              ////////////////////////////////////////////////////////////////////
-              ////////////// /Graph ///////////////////////////////////////////////
-              ////////////////////////////////////////////////////////////////////
-              var data_graph_tkil = {
-                  labels: [
-                          ],
-                  datasets: [
-                      {
-                          label: "Jalabert",
-                          fillColor: "rgba(220,220,220,0.5)",
-                          strokeColor: "rgba(220,220,220,0.8)",
-                          highlightFill: "rgba(220,220,220,0.75)",
-                          highlightStroke: "rgba(220,220,220,1)",
-                          data: [4.3,4.2]
-                      },
-                      {
-                          label: "Landreau",
-                          fillColor: "rgba(151,187,205,0.5)",
-                          strokeColor: "rgba(151,187,205,0.8)",
-                          highlightFill: "rgba(151,187,205,0.75)",
-                          highlightStroke: "rgba(151,187,205,1)",
-                          data: [5.1,4.1]
-                      }
-                  ]
-              };
-
-              var data = {
-                  labels: [
-                          ],
-                  datasets: [
-                      {
-                          fillColor: "rgba(220,220,220,0.5)",
-                          strokeColor: "rgba(220,220,220,0.8)",
-                          highlightFill: "rgba(220,220,220,0.75)",
-                          highlightStroke: "rgba(220,220,220,1)",
-                          data: []
-                      },
-                  ]
-              };
-
-              function updateGraph(name,tk){
-                window.myBar.addData([tk, tk], "1k");
-                window.myBar.update();
-              }
-
-              ////////////////////////////////////////////////////////////////////
-              ////////////// /Graph ///////////////////////////////////////////////
-              ////////////////////////////////////////////////////////////////////
-
-
-              ////////////////////////////////////////////////////////////////////
-              ////////////// Socket///////////////////////////////////////////////
-              ////////////////////////////////////////////////////////////////////
-              var socket = io.connect('/');
-
-              socket.on('add_marker', function(data) {
-                  updateMarker(data.user,data.lat,data.long);
-                  updateIndicator(data.user,data.hr,data.speed,data.distance);
-              })
-
-              socket.on('add_pk', function(data) {
-                  updateGraph(data.user,data.tk);
-              })
-
-              socket.on('init_pk', function(data) {
-                for (index = 0; index < data.tks.length; ++index) {
-                  window.myBar.addData([data.tks[index][1],data.tks[index][2]], data.tks[index][0]);
-                }
-              })
-              ////////////////////////////////////////////////////////////////////
-              ////////////// /Socket///////////////////////////////////////////////
-              ////////////////////////////////////////////////////////////////////
-
-              ////////////////////////////////////////////////////////////////////
-              ////////////// Common ///////////////////////////////////////////////
-              ////////////////////////////////////////////////////////////////////
-              google.maps.event.addDomListener(window, 'load', mapInitialize);
-
-              window.onload = function(){
-                var ctx = document.getElementById("tab_hr_ml").getContext("2d");
-                window.tabHrMl = new Chart(ctx).Line(data, {
-                   responsive : true,
-                   bezierCurve: true
-                });
-
-                var ctx = document.getElementById("tab_speed_ml").getContext("2d");
-                window.tabSpeedMl = new Chart(ctx).Line(data, {
-                   responsive : true,
-                   bezierCurve: true
-                });
-
-                var ctx = document.getElementById("tab_dist_ml").getContext("2d");
-                window.tabDistMl = new Chart(ctx).Line(data, {
-                   responsive : true,
-                   bezierCurve: true
-                });
-
-
-                var ctx = document.getElementById("tab_hr_lj").getContext("2d");
-                window.tabHrLj = new Chart(ctx).Line(data, {
-                   responsive : true,
-                   bezierCurve: true
-                });
-
-                var ctx = document.getElementById("tab_speed_lj").getContext("2d");
-                window.tabSpeedLj = new Chart(ctx).Line(data, {
-                   responsive : true,
-                   bezierCurve: true
-                });
-
-                var ctx = document.getElementById("tab_dist_lj").getContext("2d");
-                window.tabDistLj = new Chart(ctx).Line(data, {
-                   responsive : true,
-                   bezierCurve: true
-                });
-
-
-            	}
-
-              ////////////////////////////////////////////////////////////////////
-              ////////////// /Common///////////////////////////////////////////////
-              ////////////////////////////////////////////////////////////////////
-
-
-      	</script>
-
-		<!-- <div id="top">
-			<div align="center"> <h2> Welcome to NYC marathon tracker </h2></div>
-		</div> -->
-
-    <div id="left">
-        <table>
-          <tr>Landreau</tr>
-          <tr> <div id="ml_hr">-</div></tr>
-          <tr> <div id="ml_distance">-</div></tr>
-          <tr> <div id="ml_speed">-</div></tr>
-        </table>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Smoozi NYC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="Description" lang="en" content="ADD SITE DESCRIPTION">
+  <meta name="author" content="ADD AUTHOR INFORMATION">
+  <meta name="robots" content="index, follow">
+
+
+  <!-- Override CSS file - add your own CSS rules -->
+
+  <link rel="stylesheet" type="text/css" href="./css/style.css" />
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmhelMVEXev83EyFPJhCJ1fYnQleKPfos&sensor=true"></script>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="./js/marathon_value.js"></script>
+  <script type="text/javascript" src="./js/chart.js"></script>
+
+
+
+</head>
+<body>
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-57925881-11', 'auto');
+  ga('send', 'pageview');
+
+  </script>
+
+  <script type="text/javascript">
+  ////////////////////////////////////////////////////////////////////
+  ////////////// GMAPS ///////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+  var map = null;
+
+  // tab of user information
+  var users = {};
+
+  function mapInitialize() {
+    map = new google.maps.Map(document.getElementById("map-canvas"), {
+      zoom: 12,
+      // nyc   center: new google.maps.LatLng(40.742494, -73.953867)
+      center: new google.maps.LatLng(45.764043, 4.835659)
+    });
+    infowindow = new google.maps.InfoWindow({ content: 'Test' });
+    google.maps.event.addListener(map, 'click', function() {
+      infowindow.close(map);
+    });
+
+    nycMarathonInitialize();
+  }
+
+
+  function nycMarathonInitialize(){
+    var nycMarathon = new google.maps.Polyline({
+      path: nycMarathonCoordinates,
+      geodesic: true,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1.0,
+      strokeWeight: 2
+    });
+
+    nycMarathon.setMap(map);
+  }
+
+
+  function updateMarker(name,lat,long){
+    // Take the user
+    var user = users[name];
+    // si il n'esite pas on crÃ©ait le marker et son user
+    if(!user){
+      user = createUser(name);
+      users[name] = user;
+    }
+    //On update le marker ( qu(il soit nouveau ou ancien))
+    user.marker.setPosition(new google.maps.LatLng(lat, long));
+  }
+
+  function createUser(name){
+    var user = new Object();
+
+    //affect the name
+    user.name = name;
+
+    // crearte the marker
+    var marker = new google.maps.Marker({ map:map });
+    google.maps.event.addListener(marker, 'click', function() {
+      infowindow.setContent(marker.getTitle());
+      infowindow.open(map, marker);
+    });
+
+    // Img management
+    if(name === 'lj'){
+      marker.setIcon('./img/LJ.png')
+    }else{
+      marker.setIcon('./img/ML.png')
+    }
+
+    // affect set marker
+    user.marker = marker;
+
+    return user;
+  }
+
+
+
+  function updateIndicator(name,hr,speed,distance){
+    if(name === 'lj'){
+      // document.getElementById("lj_hr").textContent = hr;
+      // document.getElementById("lj_speed").textContent = speed;
+      // document.getElementById("lj_distance").textContent = distance;
+      //
+      window.tabHrLj.addData([hr], "");
+      window.tabSpeedLj.addData([speed], "");
+      window.tabDistLj.addData([distance], "");
+      //
+      window.tabHrLj.update();
+      window.tabSpeedLj.update();
+      window.tabDistLj.update();
+
+    }else{
+      // document.getElementById("ml_hr").textContent = hr;
+      // document.getElementById("ml_speed").textContent = speed;
+      // document.getElementById("ml_distance").textContent = distance;
+      //
+      window.tabHrMl.addData([hr], "");
+      window.tabSpeedMl.addData([speed], "");
+      window.tabDistMl.addData([distance], "");
+      //
+      window.tabSpeedMl.update();
+      window.tabHrMl.update();
+      window.tabDistMl.update();
+    }
+
+
+  }
+
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////// /GMAPS ///////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////// /Graph ///////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+  var data = {
+    labels: [
+    ],
+    datasets: [
+      {
+        fillColor: "rgba(152, 217, 78, 0.9)",
+        strokeColor: "rgba(250, 61, 110, 0.5)",
+        highlightFill: "rgba(220,220,220,0.75)",
+        highlightStroke: "rgba(220,220,220,1)",
+        data: []
+      },
+    ]
+  };
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////// /Graph ///////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////// Socket///////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+  var socket = io.connect('/');
+
+  socket.on('add_marker', function(data) {
+    updateMarker(data.user,data.lat,data.long);
+    updateIndicator(data.user,data.hr,data.speed,data.distance);
+  })
+
+  socket.on('add_pk', function(data) {
+    updateGraph(data.user,data.tk);
+  })
+
+  socket.on('init_pk', function(data) {
+    for (index = 0; index < data.tks.length; ++index) {
+      window.myBar.addData([data.tks[index][1],data.tks[index][2]], data.tks[index][0]);
+    }
+  })
+  ////////////////////////////////////////////////////////////////////
+  ////////////// /Socket///////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////// Common ///////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+  google.maps.event.addDomListener(window, 'load', mapInitialize);
+
+  window.onload = function(){
+    var ctx = document.getElementById("tab_hr_ml").getContext("2d");
+    window.tabHrMl = new Chart(ctx).Line(data, {
+      responsive : true,
+      bezierCurve: true,
+      showTooltips: false,
+      scaleLineColor: "rgba(204, 44, 44, 0.9)",
+    });
+
+    var ctx = document.getElementById("tab_speed_ml").getContext("2d");
+    window.tabSpeedMl = new Chart(ctx).Line(data, {
+      responsive : true,
+      bezierCurve: true,
+      showTooltips: false,
+      scaleLineColor: "rgba(204, 44, 44, 0.9)",
+    });
+
+    var ctx = document.getElementById("tab_dist_ml").getContext("2d");
+    window.tabDistMl = new Chart(ctx).Line(data, {
+      responsive : true,
+      bezierCurve: true,
+      showTooltips: false,
+
+      scaleLineColor: "rgba(204, 44, 44, 0.9)",
+    });
+
+
+    var ctx = document.getElementById("tab_hr_lj").getContext("2d");
+    window.tabHrLj = new Chart(ctx).Line(data, {
+      responsive : true,
+      bezierCurve: true,
+      showTooltips: false,
+      scaleLineColor: "rgba(204, 44, 44, 0.9)",
+    });
+
+    var ctx = document.getElementById("tab_speed_lj").getContext("2d");
+    window.tabSpeedLj = new Chart(ctx).Line(data, {
+      responsive : true,
+      bezierCurve: true,
+      showTooltips: false,
+      scaleLineColor: "rgba(204, 44, 44, 0.9)",
+    });
+
+    var ctx = document.getElementById("tab_dist_lj").getContext("2d");
+    window.tabDistLj = new Chart(ctx).Line(data, {
+      responsive : true,
+      bezierCurve: true,
+      showTooltips: false,
+      scaleLineColor: "rgba(204, 44, 44, 0.9)",
+    });
+
+
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////// /Common///////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+  </script>
+
+
+  <div class="header">
+    <div class="container">
+      <h1 class="header-heading">Smoozi</h1>
     </div>
+  </div>
+  <div class="nav-bar">
+    <div class="container">
+      <ul class="nav">
 
-
-    <div id="map-canvas"></div>
-
-
-    <div id="right">
-        <table>
-            <tr> Jalabert</tr>
-            <tr> <div id="lj_hr">-</div></tr>
-            <tr> <div id="lj_distance">-</div></tr>
-            <tr> <div id="lj_speed">-</div></tr>
-        </table>
+      </ul>
     </div>
+  </div>
+  <div class="content">
+    <div class="container">
+      <div class="col1">
 
-   <div id="graph_canvas_lj">
-     <table>
-         <tr> <td colspan="2" align="center"><img height="5%" width="5%" src="/img/LJ.png" alt="Smiley face" </td></tr>
-         <tr> <td>hr</td><td><canvas id="tab_hr_lj"></canvas>  </td></tr>
-         <tr> <td>dist</td><td><canvas id="tab_dist_lj"></canvas>  </td></tr>
-         <tr> <td>speed</td><td><canvas id="tab_speed_lj"></canvas>  </td></tr>
-     </table>
-   </div>
+        <!-- Responsive images -->
+        <p><div id="map-canvas"></div></p>
 
-   <div id="graph_canvas_ml">
-     <table>
-         <tr> <td colspan="2" align="center"><img height="5%" width="5%" src="/img/ML.png" alt="Smiley face" </td></tr>
-         <tr> <td>hr</td><td><canvas id="tab_hr_ml"></canvas>  </td></tr>
-         <tr> <td>dist</td><td><canvas id="tab_dist_ml"></canvas>  </td></tr>
-         <tr> <td>speed</td><td><canvas id="tab_speed_ml"></canvas>  </td></tr>
-     </table>
-   </div>
+        <a class="twitter-timeline" href="https://twitter.com/wurstcraftsman" data-widget-id="654673309544480768">Tweets by @wurstcraftsman</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
-<!-- <canvas id="bar_tab"></canvas> -->
+    <p></p>
+        <!-- Tables -->
+        <h3>Resumé</h3>
 
-
-    </body>
-</html>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Km</th>
+              <th>Chrono</th>
+              <th>Temps pour réaliser le km</th>
+              <th>Vitesse moy</th>
+              <th>Allure moy</th>
+              <th>FC moy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">2</th>
+              <td>5'12</td>
+              <td>5'12</td>
+              <td>12.5</td>
+              <td>5'12</td>
+              <td>112</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>4'32</td>
+              <td>4'32</td>
+              <td>15.5</td>
+              <td>4'32</td>
+              <td>136</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col2">
+        <h3>Landreau</h3>
+        <p><canvas id="tab_hr_ml"></p>
+          <p><canvas id="tab_dist_ml"></p>
+            <p><canvas id="tab_speed_ml"></p>
+            </div>
+            <div class="col3">
+              <h3>Jalabert</h3>
+              <p><canvas id="tab_hr_lj"></p>
+                <p><canvas id="tab_dist_lj"></p>
+                  <p><canvas id="tab_speed_lj"></p>
+                  </div>
+                </div>
+              </div>
+              <div class="footer">
+                <div class="container">
+                  &copy; Copyright 2015 - Smoozy
+                </div>
+              </div>
+            </body>
+            </html>
