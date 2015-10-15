@@ -72,10 +72,52 @@ router.route('/data/marker/lj/add')
           res.send(200, 'Tk call');
     });
 
+    router.route('/test')
+      //add
+      .post(function (req, res) {
+          io.sockets.emit('add_marker',{user:'lj' , lat:req.body.values.lat , long:req.body.values.long , hr:req.body.values.hr , speed:req.body.values.speed * 3.6,distance:req.body.values.distance});
+          var dist = 0;
+          setInterval(function() {
+            sendDataTest(req,dist);
+            dist = dist + 2;
+          }, 2000);
+
+          res.send(200, 'API TEST CALLING');
+      });
+
+
 app.use('/api', router);
   ///////////////////////////////
   // END ROUTING
   //////////////////////////////////
+
+
+  ///////////////////////////////
+  // TEST
+  //////////////////////////////////
+  function sendDataTest(req,dist){
+    console.log("je passe");
+     var hrLj = 130 + (Math.random() * 10);
+     var hrMl = 110 + (Math.random() * 10);
+
+     var speedLj = 5 + (Math.random() * 1);
+     var speedMl = 4 + (Math.random() * 1);
+
+     var longMl = 4.953425025939941 + Math.random() /10;
+     var latMl = 45.759 + Math.random() /10;
+
+     var longLj = 4.953425025939941 + Math.random() /10;
+     var latLj = 45.759 + Math.random() /10;
+
+
+     io.sockets.emit('add_marker',{user:'lj' , lat:latLj , long:longLj , hr:hrLj, speed:speedLj  ,distance:dist});
+     io.sockets.emit('add_marker',{user:'ml' , lat:latMl , long:longMl , hr:hrMl , speed:speedMl ,distance:dist});
+  }
+
+  ///////////////////////////////
+  // END TEST
+  //////////////////////////////////
+
 
   ///////////////////////////////
   // Data managemet

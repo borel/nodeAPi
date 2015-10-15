@@ -127,15 +127,15 @@
 
 
 
-              function updateIndicator(name,hr,speed,distance){
-                if(name === 'lj'){
+                function updateIndicator(name,hr,speed,distance){
+                  if(name === 'lj'){
                   document.getElementById("lj_hr").textContent = hr;
                   document.getElementById("lj_speed").textContent = speed;
                   document.getElementById("lj_distance").textContent = distance;
 
-                  window.tabHrLj.addData([hr], "lj");
-                  window.tabSpeedLj.addData([speed], "lj");
-                  window.tabDistLj.addData([distance], "lj");
+                  window.tabHrLj.addData([hr], "");
+                  window.tabSpeedLj.addData([speed], "");
+                  window.tabDistLj.addData([distance], "");
 
                   window.tabHrLj.update();
                   window.tabSpeedLj.update();
@@ -146,9 +146,9 @@
                   document.getElementById("ml_speed").textContent = speed;
                   document.getElementById("ml_distance").textContent = distance;
 
-                  window.tabHrMl.addData([hr], "ml");
-                  window.tabSpeedMl.addData([speed], "ml");
-                  window.tabDistMl.addData([distance], "ml");
+                  window.tabHrMl.addData([hr], "");
+                  window.tabSpeedMl.addData([speed], "");
+                  window.tabDistMl.addData([distance], "");
 
                   window.tabSpeedMl.update();
                   window.tabHrMl.update();
@@ -289,9 +289,9 @@
 
       	</script>
 
-		<div id="top">
+		<!-- <div id="top">
 			<div align="center"> <h2> Welcome to NYC marathon tracker </h2></div>
-		</div>
+		</div> -->
 
     <div id="left">
         <table>
