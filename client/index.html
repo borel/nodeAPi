@@ -85,38 +85,47 @@
               function updateMarker(name,lat,long){
 
                 // Take the user
-                      var userInformation = users[name];
+                var user = users[name];
 
-                      // si il n'esite pas on créait le marker et son user
-                        if(!userInformation){
-                          // New object of user info
-                          users[name] = UserInfo(name);
-
-                          // affect to userInformation for update
-                          userInformation = users[name];
-
-                          // crearte the marker
-                          var marker = new google.maps.Marker({ map:map });
-                           google.maps.event.addListener(marker, 'click', function() {
-                                       infowindow.setContent(marker.getTitle());
-                                       infowindow.open(map, marker);
-                           });
-
-                           // Img management
-                           if(name === 'lj'){
-                             marker.setIcon('./img/LJ.png')
-                           }else{
-                             marker.setIcon('./img/ML.png')
-                           }
-
-                           //affect the marker
-                           userInformation.marker = marker;
+              // si il n'esite pas on créait le marker et son user
+                        if(!user){
+                          user = createUser(name);
+                          users[name] = user;
                         }
 
                   //On update le marker ( qu(il soit nouveau ou ancien))
-                  userInformation.marker.setPosition(new google.maps.LatLng(lat, long));
+                  user.marker.setPosition(new google.maps.LatLng(lat, long));
 
               }
+
+              function createUser(name){
+
+                 var user = new Object();
+
+                //affect the name
+                 user.name = name;
+
+                  // crearte the marker
+                  var marker = new google.maps.Marker({ map:map });
+                   google.maps.event.addListener(marker, 'click', function() {
+                               infowindow.setContent(marker.getTitle());
+                               infowindow.open(map, marker);
+                   });
+
+                   // Img management
+                   if(name === 'lj'){
+                     marker.setIcon('./img/LJ.png')
+                   }else{
+                     marker.setIcon('./img/ML.png')
+                   }
+
+                   // affect set marker
+                   user.marker = marker;
+
+                   return user;
+              }
+
+
 
               function updateIndicator(name,hr,speed,distance){
                 if(name === 'lj'){
@@ -124,11 +133,31 @@
                   document.getElementById("lj_speed").textContent = speed;
                   document.getElementById("lj_distance").textContent = distance;
 
+                  window.tabHrLj.addData([hr], "1k");
+                  window.tabHrLj.update();
+
+                  window.tabSpeedLj.addData([speed], "1k");
+                  window.tabSpeedLj.update();
+
+                  window.tabDistLj.addData([distance], "1k");
+                  window.tabDistLj.update();
+
                 }else{
                   document.getElementById("ml_hr").textContent = hr;
                   document.getElementById("ml_speed").textContent = speed;
                   document.getElementById("ml_distance").textContent = distance;
+
+                  window.tabHrMl.addData([hr], "");
+                  window.tabHrMl.update();
+
+                  window.tabSpeedMl.addData([speed], "");
+                  window.tabSpeedMl.update();
+
+                  window.tabDistMl.addData([distance], "");
+                  window.tabDistMl.update();
                 }
+
+
               }
 
 
@@ -139,7 +168,7 @@
               ////////////////////////////////////////////////////////////////////
               ////////////// /Graph ///////////////////////////////////////////////
               ////////////////////////////////////////////////////////////////////
-              var data = {
+              var data_graph_tkil = {
                   labels: [
                           ],
                   datasets: [
@@ -149,7 +178,7 @@
                           strokeColor: "rgba(220,220,220,0.8)",
                           highlightFill: "rgba(220,220,220,0.75)",
                           highlightStroke: "rgba(220,220,220,1)",
-                          data: []
+                          data: [4.3,4.2]
                       },
                       {
                           label: "Landreau",
@@ -157,8 +186,22 @@
                           strokeColor: "rgba(151,187,205,0.8)",
                           highlightFill: "rgba(151,187,205,0.75)",
                           highlightStroke: "rgba(151,187,205,1)",
-                          data: []
+                          data: [5.1,4.1]
                       }
+                  ]
+              };
+
+              var data = {
+                  labels: [
+                          ],
+                  datasets: [
+                      {
+                          fillColor: "rgba(220,220,220,0.5)",
+                          strokeColor: "rgba(220,220,220,0.8)",
+                          highlightFill: "rgba(220,220,220,0.75)",
+                          highlightStroke: "rgba(220,220,220,1)",
+                          data: []
+                      },
                   ]
               };
 
@@ -201,11 +244,44 @@
               google.maps.event.addDomListener(window, 'load', mapInitialize);
 
               window.onload = function(){
-                var ctx = document.getElementById("bar_tab").getContext("2d");
-                window.myBar = new Chart(ctx).Line(data, {
+                var ctx = document.getElementById("tab_hr_ml").getContext("2d");
+                window.tabHrMl = new Chart(ctx).Line(data, {
                    responsive : true,
                    bezierCurve: true
                 });
+
+                var ctx = document.getElementById("tab_speed_ml").getContext("2d");
+                window.tabSpeedMl = new Chart(ctx).Line(data, {
+                   responsive : true,
+                   bezierCurve: true
+                });
+
+                var ctx = document.getElementById("tab_dist_ml").getContext("2d");
+                window.tabDistMl = new Chart(ctx).Line(data, {
+                   responsive : true,
+                   bezierCurve: true
+                });
+
+
+                var ctx = document.getElementById("tab_hr_lj").getContext("2d");
+                window.tabHrLj = new Chart(ctx).Line(data, {
+                   responsive : true,
+                   bezierCurve: true
+                });
+
+                var ctx = document.getElementById("tab_speed_lj").getContext("2d");
+                window.tabSpeedLj = new Chart(ctx).Line(data, {
+                   responsive : true,
+                   bezierCurve: true
+                });
+
+                var ctx = document.getElementById("tab_dist_lj").getContext("2d");
+                window.tabDistLj = new Chart(ctx).Line(data, {
+                   responsive : true,
+                   bezierCurve: true
+                });
+
+
             	}
 
               ////////////////////////////////////////////////////////////////////
@@ -234,14 +310,33 @@
 
     <div id="right">
         <table>
-            <tr>Jalabert</tr>
+            <tr> Jalabert</tr>
             <tr> <div id="lj_hr">-</div></tr>
             <tr> <div id="lj_distance">-</div></tr>
             <tr> <div id="lj_speed">-</div></tr>
         </table>
     </div>
 
-      <canvas id="bar_tab" height="100" width="200"></canvas>
+   <div id="graph_canvas_lj">
+     <table>
+         <tr> <td colspan="2" align="center"><img src="/img/LJ.png" alt="Smiley face" </td></tr>
+         <tr> <td>hr</td><td><canvas id="tab_hr_lj"></canvas>  </td></tr>
+         <tr> <td>dist</td><td><canvas id="tab_dist_lj"></canvas>  </td></tr>
+         <tr> <td>speed</td><td><canvas id="tab_speed_lj"></canvas>  </td></tr>
+     </table>
+   </div>
+
+   <div id="graph_canvas_ml">
+     <table>
+         <tr> <td colspan="2" align="center"><img src="/img/ML.png" alt="Smiley face" </td></tr>
+         <tr> <td>hr</td><td><canvas id="tab_hr_ml"></canvas>  </td></tr>
+         <tr> <td>dist</td><td><canvas id="tab_dist_ml"></canvas>  </td></tr>
+         <tr> <td>speed</td><td><canvas id="tab_speed_ml"></canvas>  </td></tr>
+     </table>
+   </div>
+
+<!-- <canvas id="bar_tab"></canvas> -->
+
 
     </body>
 </html>
