@@ -1,23 +1,27 @@
 <html>
 <head>
+
+  <title>Smoozi NYC</title>
+
+  <!-- Meta -->
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Smoozi NYC</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="Description" lang="en" content="ADD SITE DESCRIPTION">
   <meta name="author" content="ADD AUTHOR INFORMATION">
   <meta name="robots" content="index, follow">
 
-
-  <!-- Override CSS file - add your own CSS rules -->
-
+  <!-- CSS -->
   <link rel="stylesheet" type="text/css" href="./css/style.css" />
+  <link rel="stylesheet" type="text/css" href="./css/flipclock.css">
+
+  <!-- JS -->
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmhelMVEXev83EyFPJhCJ1fYnQleKPfos&sensor=true"></script>
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
   <script type="text/javascript" src="./js/marathon_value.js"></script>
   <script type="text/javascript" src="./js/chart.js"></script>
-
-
+  <script type="text/javascript" src="./js/jquery.js"></script>
+	<script type="text/javascript" src="./js/flipclock.min.js"></script>
 
 </head>
 <body>
@@ -265,6 +269,9 @@
       scaleLineColor: "rgba(204, 44, 44, 0.9)",
     });
 
+    var clock = $('.your-clock').FlipClock({
+    // ... your options here
+    });
 
   }
 
@@ -293,7 +300,7 @@
         <!-- Responsive images -->
         <p><div id="map-canvas"></div></p>
 
-        <p><div id="tc_810"><a title="NYC Marathon" href="http://www.tickcounter.com/countup/20151015120000am/w422/NYC_Marathon">NYC Marathon</a> <a title="Countup online" href="http://www.tickcounter.com">Countup</a></div><script type="text/javascript">(function(){var s = document.createElement("script");s.src = "http://www.tickcounter.com/widget/countup/20151015120000am/w422/810/0/000000fffcff757a85/NYC_Marathon";s.async = "async";s.type = "text/javascript";var x = document.getElementById("tc_810");x.insertBefore(s,x.lastChild);}());</script></p>
+        <p><div class="your-clock"></div></p>
 
         <p><a style=" margin-left: auto; margin-right: auto;}" class="twitter-timeline" href="https://twitter.com/wurstcraftsman" data-widget-id="654673309544480768">Tweets by @wurstcraftsman</a></p>
 
