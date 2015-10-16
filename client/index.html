@@ -45,6 +45,7 @@
   var map = null;
   var countLJ = null;
   var countML = null;
+  var clock = null
 
   // tab of user information
   var users = {};
@@ -196,6 +197,14 @@
   ////////////// /Graph ///////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////
 
+  ////////////////////////////////////////////////////////////////////
+  ////////////// Clock ///////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////// /Clock///////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////////////
   ////////////// Socket///////////////////////////////////////////////
@@ -216,9 +225,15 @@
       window.myBar.addData([data.tks[index][1],data.tks[index][2]], data.tks[index][0]);
     }
   })
-  ////////////////////////////////////////////////////////////////////
-  ////////////// /Socket///////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////
+
+  socket.on('init_clock', function(data) {
+     clock.setTime(data);
+     clock.start();
+  })
+
+  socket.on('stop_clock', function(data) {
+     clock.stop();
+  })
 
   ////////////////////////////////////////////////////////////////////
   ////////////// Common ///////////////////////////////////////////////
@@ -269,9 +284,10 @@
       scaleLineColor: "rgba(204, 44, 44, 0.9)",
     });
 
-    var clock = $('.your-clock').FlipClock({
-    // ... your options here
+    clock = $('.marathon-clock').FlipClock({
+        autoStart : false
     });
+
 
   }
 
@@ -300,9 +316,9 @@
         <!-- Responsive images -->
         <p><div id="map-canvas"></div></p>
 
-        <p><div class="your-clock"></div></p>
+        <p><div class="marathon-clock"></div></p>
 
-        <p><a style=" margin-left: auto; margin-right: auto;}" class="twitter-timeline" href="https://twitter.com/wurstcraftsman" data-widget-id="654673309544480768">Tweets by @wurstcraftsman</a></p>
+        <p><a class="twitter-timeline" href="https://twitter.com/wurstcraftsman" data-widget-id="654673309544480768">Tweets by @wurstcraftsman</a></p>
 
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 

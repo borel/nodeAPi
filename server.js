@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 // array to store data
 var tks = new Array();
-
+var startMarathonDate = null;
 
 ////////////////////////////////////////
 // API routing
@@ -72,17 +72,38 @@ router.route('/data/marker/lj/add')
           res.send(200, 'Tk call');
     });
 
-    router.route('/test')
+    router.route('/clock/start')
+        //add
+        .post(function (req, res) {
+            startMarathonDate = new Date();
+            initTimerMarathon();
+            res.send(200, 'chrono_start');
+     });
+
+     router.route('/clock/stop')
+         //add
+         .post(function (req, res) {
+            io.sockets.emit('stop_clock');
+            res.send(200, 'chrono_stop');
+      });
+
+  router.route('/test')
       //add
       .post(function (req, res) {
+          // init marahton date
+          startMarathonDate = new Date();
+          initTimerMarathon();
+
           var dist = 0;
+          startMarathonDate = new Date();
+
           setInterval(function() {
             sendDataTest(req,dist);
             dist = dist + 2;
           }, 5000);
 
           res.send(200, 'API TEST CALLING');
-      });
+   });
 
 
 app.use('/api', router);
@@ -116,52 +137,18 @@ app.use('/api', router);
   ///////////////////////////////
   // END TEST
   //////////////////////////////////
-
+  function initTimerMarathon(){
+     if(startMarathonDate != null){
+        var timer = (new Date() - startMarathonDate) / 1000;
+        io.sockets.emit('init_clock',timer);
+      }
+  }
 
   ///////////////////////////////
   // Data managemet
   //////////////////////////////////
-  function addPK(user,tk,distance) {
-
-    dist = Math.round(distance/1000);
-
-    if(tks[dist] === null){
-      tk = Array(dist,tk,tk);
-      tks.push(tk);
-    }
 
 
-    //tks.push(Array('3','3.3','2.9'));
-
-
-
-      //
-      // tk = new Array();
-      //
-      // if(user === 'lj'){
-      //   if(tks[distance] === null){
-      //       tk(distance,tk,tk)
-      //   }else{
-      //       tk(distance,tk,tk)
-      //   }
-      //
-      // }else{
-      //   if(tks[distance] === null){
-      //      tk(distance,tk,tk)
-      //   }else{
-      //       tk(distance,tk,tk)
-      //   }
-      // }
-
-
-      // tks = Array(
-      //     Array('1','5.3','2.1'),
-      //     Array('2','5.6','2.8'),
-      //     Array('3','5.1','2.4'),
-      //     Array('4','4.3','4.1')
-      // );
-
-  }
 
   ///////////////////////////////
   // END ROUTING
@@ -169,12 +156,14 @@ app.use('/api', router);
 
   // Quand on client se connecte, on renseigne le graph
   io.sockets.on('connection', function (socket) {
-    io.sockets.emit('init_pk',{tks:tks});
+      io.sockets.emit('init_pk',{tks:tks});
+      //calcul timer
+      initTimerMarathon();
   });
 
-// For hosing on Heroku
-io.configure(function () {
-  io.set("transports", ["xhr-polling"]);
-  io.set("polling duration", 2);
-  io.set('log level', 1)
-});
+  // For hosing on Heroku
+  io.configure(function () {
+    io.set("transports", ["xhr-polling"]);
+    io.set("polling duration", 2);
+    io.set('log level', 1)
+  });
