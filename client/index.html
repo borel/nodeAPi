@@ -21,7 +21,7 @@
   <script type="text/javascript" src="./js/marathon_value.js"></script>
   <script type="text/javascript" src="./js/chart.js"></script>
   <script type="text/javascript" src="./js/jquery.js"></script>
-	<script type="text/javascript" src="./js/flipclock.min.js"></script>
+  <script type="text/javascript" src="./js/flipclock.min.js"></script>
 
 </head>
 <body>
@@ -131,13 +131,12 @@
       //
       window.tabHrLj.addData([hr], "");
       window.tabSpeedLj.addData([speed], "");
-      window.tabDistLj.addData([distance], "");
+      updateChartData(window.tabDistLj,distance);
 
       // if there is already 10 value , we delete the first value
       if(countLJ > 10){
         window.tabHrLj.removeData();
         window.tabSpeedLj.removeData();
-        window.tabDistLj.removeData();
       }
       //
       window.tabHrLj.update();
@@ -154,13 +153,12 @@
       //
       window.tabHrMl.addData([hr], "");
       window.tabSpeedMl.addData([speed], "");
-      window.tabDistMl.addData([distance], "");
+      updateChartData(window.tabDistMl,distance);
 
       // if there is already 10 value , we delete the first value
       if(countML > 10){
         window.tabHrMl.removeData();
         window.tabSpeedMl.removeData();
-        window.tabDistMl.removeData();
       }
       //
       window.tabSpeedMl.update();
@@ -193,18 +191,71 @@
     ]
   };
 
+
+  var dataDistance = [
+    {
+        value: 52200,
+        color:"#F7464A",
+        highlight: "#FF5A5E",
+        label: "A faire"
+    },
+    {
+        value: 0,
+        color: "#46BFBD",
+        highlight: "#5AD3D1",
+        label: "Fait"
+    }
+  ]
+
   ////////////////////////////////////////////////////////////////////
   ////////////// /Graph ///////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////////////
-  ////////////// Clock ///////////////////////////////////////////////
+  ////////////// table_data //////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+  function addDataKm(nbk,user,time,tklk,speedlk,hrlk)
+  {
+      var newRow = document.createElement('tr');
+      newRow.innerHTML = '  <th scope="row">'+nbk+'</th>  <td>'+time.h+'h'+time.m+'m'+time.s+'s</td>   <td>'+tklk+'</td>   <td>'+speedlk+'</td>   <td>'+hrlk+'</td>';
+    if(user === 'lj'){
+      document.getElementById('table_km_lj').appendChild(newRow);
+    }else{
+      document.getElementById('table_km_ml').appendChild(newRow);
+    }
+  }
+  ////////////////////////////////////////////////////////////////////
+  ////////////// /table_data//////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////// chart_data //////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+  function updateChartData(chart,distance)
+  {
+    chart.removeData();
+    chart.removeData();
+
+    chart.addData({
+      value: 42200 - distance,
+      color:"#F7464A",
+      highlight: "#FF5A5E",
+      label: "A faire"
+    });
+
+    chart.addData({
+      value: distance,
+      color: "#46BFBD",
+      highlight: "#5AD3D1",
+      label: "Fait"
+    });
+
+  }
+  ////////////////////////////////////////////////////////////////////
+  ////////////// /table_data//////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////
 
 
-  ////////////////////////////////////////////////////////////////////
-  ////////////// /Clock///////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////////////
   ////////////// Socket///////////////////////////////////////////////
@@ -216,23 +267,43 @@
     updateIndicator(data.user,data.hr,data.speed,data.distance);
   })
 
-  socket.on('add_pk', function(data) {
-    updateGraph(data.user,data.tk);
+  socket.on('add_data_table', function(data) {
+    addDataKm(data.nbk,data.user,data.time,data.tklk,data.speedlk,data.hrlk);
   })
 
-  socket.on('init_pk', function(data) {
-    for (index = 0; index < data.tks.length; ++index) {
-      window.myBar.addData([data.tks[index][1],data.tks[index][2]], data.tks[index][0]);
+  socket.on('init_data_table_lj', function(data) {
+    //init the tab
+    var tableDataLj = document.getElementById('table_km_lj');
+    while(tableDataLj.childNodes.length>2){tableDataLj.removeChild(tableDataLj.lastChild);}
+
+    //push the data
+    for (index = 1; index < data.length; ++index) {
+       if(data[index] != null){
+         addDataKm(index,'lj',data[index][0],data[index][1],data[index][2],data[index][3]);
+        }
+     }
+  })
+
+  socket.on('init_data_table_ml', function(data) {
+    //init the tab
+    var tableDataMl = document.getElementById('table_km_ml');
+    while(tableDataMl.childNodes.length>2){tableDataMl.removeChild(tableDataMl.lastChild);}
+
+    //push the data
+    for (index = 1; index < data.length; ++index) {
+      if(data[index] != null){
+       addDataKm(index,'ml',data[index][0],data[index][1],data[index][2],data[index][3]);
+     }
     }
   })
 
   socket.on('init_clock', function(data) {
-     clock.setTime(data);
-     clock.start();
+    clock.setTime(data);
+    clock.start();
   })
 
   socket.on('stop_clock', function(data) {
-     clock.stop();
+    clock.stop();
   })
 
   ////////////////////////////////////////////////////////////////////
@@ -256,11 +327,11 @@
     });
 
     var ctx = document.getElementById("tab_dist_ml").getContext("2d");
-    window.tabDistMl = new Chart(ctx).Line(data, {
+    window.tabDistMl = new Chart(ctx).Doughnut(dataDistance, {
       responsive : true,
-      bezierCurve: true,
-      scaleLineColor: "rgba(204, 44, 44, 0.9)",
-    });
+      animationSteps: 1,
+      animateScale : false,
+      });
 
 
     var ctx = document.getElementById("tab_hr_lj").getContext("2d");
@@ -278,14 +349,14 @@
     });
 
     var ctx = document.getElementById("tab_dist_lj").getContext("2d");
-    window.tabDistLj = new Chart(ctx).Line(data, {
-      responsive : true,
-      bezierCurve: true,
-      scaleLineColor: "rgba(204, 44, 44, 0.9)",
-    });
+    window.tabDistLj = new Chart(ctx).Doughnut(dataDistance, {
+        responsive : true,
+        animationSteps: 1,
+        animateScale : false,
+      });
 
     clock = $('.marathon-clock').FlipClock({
-        autoStart : false
+      autoStart : false
     });
 
 
@@ -322,197 +393,53 @@
 
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
+        <h1> Resume </h1>
 
+        <h2> Jalabert </h2>
+        <table class="table table-striped" id='table_km_lj'>
+          <thead>
+            <tr>
+              <th>Km</th>
+              <th>T Total</th>
+              <th>T km</th>
+              <th>Vitesse moy</th>
+              <th>HR moy</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+        <h2> Landreau </h3>
+          <table class="table table-striped" id="table_km_ml">
+            <thead>
+              <tr>
+                <th>Km</th>
+                <th>T Total</th>
+                <th>T km</th>
+                <th>Vitesse moy</th>
+                <th>HR moy</th>
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
       </div>
       <div class="col2">
         <h3>Landreau</h3>
         <p><canvas id="tab_hr_ml"></p>
-          <p><canvas id="tab_dist_ml"></p>
             <p><canvas id="tab_speed_ml"></p>
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Km</th>
-                    <th>Chrono</th>
-                    <th>Temps pour réaliser le km</th>
-                    <th>Vitesse moy</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>5'12</td>
-                    <td>5'12</td>
-                    <td>12.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>4'32</td>
-                    <td>4'32</td>
-                    <td>15.5</td>
-                  </tr>
-                </tbody>
-              </table>
-      </div>
+                <p><canvas id="tab_dist_ml"></p>
 
-      <div class="col3">
+            </div>
+
+            <div class="col3">
               <h3>Jalabert</h3>
               <p><canvas id="tab_hr_lj"></p>
-                <p><canvas id="tab_dist_lj"></p>
                   <p><canvas id="tab_speed_lj"></p>
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th>Km</th>
-                          <th>Chrono</th>
-                          <th>Temps pour réaliser le km</th>
-                          <th>Vitesse moy</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th scope="row">2</th>
-                          <td>5'12</td>
-                          <td>5'12</td>
-                          <td>12.5</td>
+                        <p><canvas id="tab_dist_lj"></p>
 
-                        </tr>
-                        <tr>
-                          <th scope="row">3</th>
-                          <td>4'32</td>
-                          <td>4'32</td>
-                          <td>15.5</td>
-
-                        </tr>
-                      </tbody>
-                    </table>
-      </div>
+                  </div>
                 </div>
               </div>
 
