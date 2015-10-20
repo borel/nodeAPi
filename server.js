@@ -21,6 +21,10 @@ var datasLJ = new Array();
 
 var startMarathonDate = null;
 
+var sendData;
+var sendDataKm;
+
+
 ////////////////////////////////////////
 // API routing
 var router = express.Router();              // get an instance of the express Router
@@ -89,7 +93,7 @@ router.route('/message/add')
   res.send(200, 'start_message');
 });
 
-router.route('/test')
+router.route('/test/start')
 //add
 .post(function (req, res) {
   // init marahton date
@@ -100,22 +104,32 @@ router.route('/test')
   var distance = 0;
   startMarathonDate = new Date();
 
-  setInterval(function() {
+  sendData = setInterval(function() {
     dist = dist + 3002;
     sendDataTest(dist);
   }, 10000);
 
 
-  setInterval(function() {
+  sendDataKm = setInterval(function() {
     distance = distance + 1001;
     sendDataTestKm(distance);
-
-
   }, 20000);
 
-  res.send(200, 'API TEST CALLING');
+  res.send(200, 'test_start');
 });
 
+
+router.route('/test/stop')
+.post(function (req, res) {
+  clearInterval(sendDataKm);
+  clearInterval(sendData);
+
+  //init var
+  datasML = new Array();
+  datasLJ = new Array();
+
+  res.send(200, 'test_stop');
+});
 
 app.use('/api', router);
 ///////////////////////////////
