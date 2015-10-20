@@ -81,6 +81,14 @@ router.route('/clock/stop')
   res.send(200, 'chrono_stop');
 });
 
+
+router.route('/message/add')
+//add
+.post(function (req, res) {
+  io.sockets.emit('start_message',{message:req.body.message});
+  res.send(200, 'start_message');
+});
+
 router.route('/test')
 //add
 .post(function (req, res) {

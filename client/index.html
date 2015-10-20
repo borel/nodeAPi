@@ -306,6 +306,15 @@
     clock.stop();
   })
 
+  socket.on('start_message', function(data) {
+    document.getElementById('message').textContent = data.message;
+
+  })
+
+  socket.on('stop_message', function(data) {
+    document.getElementById('message').textContent = "";
+  })
+
   ////////////////////////////////////////////////////////////////////
   ////////////// Common ///////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////
@@ -376,7 +385,7 @@
   <div class="nav-bar">
     <div class="container">
       <ul class="nav">
-
+          <h3 style='color:red'><div id='message'></div></h3>
       </ul>
     </div>
   </div>
@@ -424,7 +433,7 @@
 
             </tbody>
           </table>
-      </div>
+      </div><
       <div class="col2">
         <h3>Landreau</h3>
         <p><canvas id="tab_hr_ml"></p>
