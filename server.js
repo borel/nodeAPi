@@ -24,6 +24,9 @@ var startMarathonDate = null;
 var sendData;
 var sendDataKm;
 
+var distanceML = null;
+var distanceLJ = null;
+
 
 ////////////////////////////////////////
 // API routing
@@ -46,6 +49,9 @@ router.route('/data/marker/ml/add')
 .post(function (req, res) {
   console.log("marker/ml/add=>Value");
   console.log(req.body);
+  //store the distance
+  distanceLJ  = req.body.values.distance;
+  //Emit io
   io.sockets.emit('add_marker',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:round(req.body.values.hr,0) ,speed: round(req.body.values.speed * 3.6,1),distance:req.body.values.distance});
   res.send(200, 'Marker call');
 });
@@ -55,6 +61,9 @@ router.route('/data/marker/lj/add')
 .post(function (req, res) {
   console.log("marker/lj/add=>Value");
   console.log(req.body);
+  //store the distance
+  distanceML  = req.body.values.distance;
+  //emit io
   io.sockets.emit('add_marker',{user:'lj' , lat:req.body.values.lat , long:req.body.values.long , hr:round(req.body.values.hr,0) , speed:round(req.body.values.speed * 3.6,1),distance:req.body.values.distance});
   res.send(200, 'Marker call');
 });
@@ -226,6 +235,14 @@ function initTablekm(){
   io.sockets.emit('init_data_table_ml',datasML);
 }
 
+function initDistance(){
+  var distances = new Array();
+  distances.distanceML = distanceML;
+  distances.distanceLJ = distanceLJ;
+
+  io.sockets.emit('init_distance',distances);
+}
+
 ///////////////////////////////
 // Data managemet
 //////////////////////////////////
@@ -264,6 +281,9 @@ io.sockets.on('connection', function (socket) {
   initTablekm();
   //calcul timer
   initTimerMarathon();
+  //init distance
+  initDistance()
+
 });
 
 // For hosing on Heroku
