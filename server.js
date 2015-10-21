@@ -103,7 +103,7 @@ router.route('/data/lj/add')
 .post(function (req, res) {
   console.log("km/lj/add=>Value");
   console.log(req.body);
-  addDataTable('lj',req.body.values.distance,req.body.values.tklk, round(req.body.values.speedlk,1), round(req.body.values.hrlk,0));
+  addDataTable('lj',req.body.values.distance,req.body.values.tklk, req.body.values.speedlk, req.body.values.hrlk);
   res.send(200, 'OK');
 });
 
@@ -112,7 +112,7 @@ router.route('/data/ml/add')
 .post(function (req, res) {
   console.log("km/ml/add=>Value");
   console.log(req.body);
-  addDataTable('ml',req.body.values.distance,req.body.values.tklk,round(req.body.values.speedlk,1), round(req.body.values.hrlk,0));
+  addDataTable('ml',req.body.values.distance,req.body.values.tklk,req.body.values.speedlk, req.body.values.hrlk);
   res.send(200, 'OK');
 });
 
@@ -243,18 +243,26 @@ function addDataTable(user,distance,tklk,speedlk,hrlk){
     // Calcul km
     nbk = Math.floor((distance+100)/1000);
 
-    //Callcul time
+    // Convert value to right format
+    speedlk = round(speedlk * 3.6,1);
+    hrlk = round(hrlk,0);
+    tklk = secondsToTime(tklk);
     time = getTimeSinceBegining();
 
-    var tableKm = [time,secondsToTime(tklk),round(speedlk,1),round(hrlk,0)];
+    var tableKm = [time,tklk,speedlk,hrlk];
     if(user === 'lj'){
+      if(datasLJ[nbk] == null){
+        // emit the socket
+        io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:tklk,speedlk:speedlk,hrlk:hrlk});
+      }
       datasLJ[nbk] = tableKm;
     }else{
+      if(datasML[nbk] == null){
+        // emit the socket
+        io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:tklk,speedlk:speedlk,hrlk:hrlk});
+      }
       datasML[nbk] = tableKm;
     }
-
-    // emit the socket
-    io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:secondsToTime(tklk),speedlk:round(speedlk,1),hrlk:round(hrlk,0)});
 }
 
 function initTimerMarathon(){
@@ -283,7 +291,7 @@ function initValue(){
   console.log('HR');
   console.log(hrLJ);
   console.log(hrLJ);
-  
+
   io.sockets.emit('init_value',{distanceLJ:distanceLJ,distanceML:distanceML,speedLJ:speedLJ,speedML:speedML,hrLJ:hrLJ,hrML:hrLJ});
 }
 
