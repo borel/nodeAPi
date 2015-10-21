@@ -198,7 +198,7 @@
   {
     var newRow = document.createElement('tr');
   //  newRow.innerHTML = '  <th scope="row">'+nbk+'</th>  <td>'+time.h+'h'+time.m+'m'+time.s+'s</td>   <td>'+tklk.h+'h'+tklk.m+'m'+tklk.s+'s</td>  <td>'+speedlk+'</td>   <td>'+hrlk+'</td>';
-    newRow.innerHTML = '  <th scope="row">'+nbk+'</th>  <td>'+time.h+'h'+time.m+'m'+time.s+'s</td>   <td>'+tklk.h+'h'+tklk.m+'m'+tklk.s+'s</td>';
+    newRow.innerHTML = '  <th scope="row">'+nbk+'</th> <td>'+tklk.h+':'+tklk.m+':'+tklk.s+'</td>  <td>'+time.h+':'+time.m+':'+time.s+'</td>   ';
     if(user === 'lj'){
       document.getElementById('table_km_lj').appendChild(newRow);
     }else{
@@ -445,8 +445,9 @@
                     <thead>
                       <tr>
                         <th>Km</th>
-                        <th>Temps total</th>
                         <th>Temps au kilométre</th>
+                        <th>Temps total</th>
+
                         <!-- <th>Vitesse moyenne</th>
                         <th>FC moyenne</th> -->
                       </tr>
@@ -470,8 +471,8 @@
                             <thead>
                               <tr>
                                 <th>Km</th>
-                                <th>Temps total</th>
                                 <th>Temps au kilométre</th>
+                                <th>Temps total</th>
                                 <!-- <th>Vitesse moyenne</th>
                                 <th>FC moyenne</th> -->
                               </tr>
