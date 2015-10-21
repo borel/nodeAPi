@@ -94,7 +94,7 @@ router.route('/data/marker/lj/add')
   }
 
   //Emit io
-  io.sockets.emit('add_marker',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:hrLJ ,speed:speedLJ ,distance:distanceLJ});
+  io.sockets.emit('add_marker',{user:'lj' ,lat:req.body.values.lat , long:req.body.values.long , hr:hrLJ ,speed:speedLJ ,distance:distanceLJ});
   res.send(200, 'OK');
 });
 
@@ -251,12 +251,14 @@ function addDataTable(user,distance,tklk,speedlk,hrlk){
 
     var tableKm = [time,tklk,speedlk,hrlk];
     if(user === 'lj'){
+      // Send data the first time
       if(datasLJ[nbk] == null){
         // emit the socket
         io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:tklk,speedlk:speedlk,hrlk:hrlk});
       }
       datasLJ[nbk] = tableKm;
     }else{
+      // Send data the first time
       if(datasML[nbk] == null){
         // emit the socket
         io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:tklk,speedlk:speedlk,hrlk:hrlk});
@@ -285,14 +287,7 @@ function initValue(){
   console.log('Distance');
   console.log(distanceLJ);
   console.log(distanceML);
-  console.log('Speed');
-  console.log(speedLJ);
-  console.log(speedML);
-  console.log('HR');
-  console.log(hrLJ);
-  console.log(hrLJ);
-
-  io.sockets.emit('init_value',{distanceLJ:distanceLJ,distanceML:distanceML,speedLJ:speedLJ,speedML:speedML,hrLJ:hrLJ,hrML:hrLJ});
+  io.sockets.emit('init_value',{distanceLJ:distanceLJ,distanceML:distanceML});
 }
 
 ///////////////////////////////

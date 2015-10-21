@@ -141,7 +141,7 @@
       //
       window.tabHrLj.update();
       window.tabSpeedLj.update();
-      window.tabDistLj.update();
+
 
     }else{
       // incrmeent the display token
@@ -163,7 +163,7 @@
       //
       window.tabSpeedMl.update();
       window.tabHrMl.update();
-      window.tabDistMl.update();
+
     }
 
 
@@ -182,30 +182,16 @@
     ],
     datasets: [
       {
-        fillColor: "rgba(220,220,220,1",
-        strokeColor: "rgba((32, 30, 33, 0.7)",
-        highlightFill: "rgba(220,220,220,0.75)",
-        highlightStroke: "rgba(220,220,220,1)",
+          fillColor: "#000",
+          strokeColor: "rgba(172, 12, 14, 0.9)",
+          pointColor: "rgba(172, 12, 14, 0.9)",
+          pointStrokeColor: "rgba(249, 12, 14, 0.9)",
+          pointHighlightFill: "rgba(249, 12, 14, 0.9)",
+          pointHighlightStroke: "rgba(249, 12, 14, 0.9)",
         data: []
       },
     ]
   };
-
-
-  var dataDistance = [
-    {
-        value: 42195,
-        color:"#F7464A",
-        highlight: "#FF5A5E",
-        label: "A faire"
-    },
-    {
-        value: 0,
-        color: "#46BFBD",
-        highlight: "#5AD3D1",
-        label: "Fait"
-    }
-  ]
 
   ////////////////////////////////////////////////////////////////////
   ////////////// /Graph ///////////////////////////////////////////////
@@ -216,8 +202,8 @@
   ////////////////////////////////////////////////////////////////////
   function addDataKm(nbk,user,time,tklk,speedlk,hrlk)
   {
-      var newRow = document.createElement('tr');
-      newRow.innerHTML = '  <th scope="row">'+nbk+'</th>  <td>'+time.h+'h'+time.m+'m'+time.s+'s</td>   <td>'+tklk.h+'h'+tklk.m+'m'+tklk.s+'s</td>  <td>'+speedlk+'</td>   <td>'+hrlk+'</td>';
+    var newRow = document.createElement('tr');
+    newRow.innerHTML = '  <th scope="row">'+nbk+'</th>  <td>'+time.h+'h'+time.m+'m'+time.s+'s</td>   <td>'+tklk.h+'h'+tklk.m+'m'+tklk.s+'s</td>  <td>'+speedlk+'</td>   <td>'+hrlk+'</td>';
     if(user === 'lj'){
       document.getElementById('table_km_lj').appendChild(newRow);
     }else{
@@ -238,17 +224,19 @@
 
     chart.addData({
       value: 42195 - distance,
-      color:"#F7464A",
-      highlight: "#FF5A5E",
+      color:"#ff0000",
+      highlight: "#F7464A",
       label: "A faire"
     });
 
     chart.addData({
       value: distance,
-      color: "#46BFBD",
-      highlight: "#5AD3D1",
+      color: "#71fc07",
+      highlight: "#0cf4c7",
       label: "Fait"
     });
+
+    chart.update();
 
   }
   ////////////////////////////////////////////////////////////////////
@@ -298,9 +286,8 @@
   })
 
   socket.on('init_value', function(data) {
-
-      updateIndicator('lj',data.hrLJ,data.speedLJ,data.distanceLJ);
-      updateIndicator('ml',data.hrML,data.speedML,data.distanceML);
+    updateChartData(window.tabDistMl,data.distanceML);
+    updateChartData(window.tabDistLj,data.distanceLJ);
   })
 
 
@@ -330,20 +317,34 @@
   window.onload = function(){
     var ctx = document.getElementById("tab_hr_ml").getContext("2d");
     window.tabHrMl = new Chart(ctx).Line(data, {
+      scaleShowGridLines : true,
       responsive : true,
       bezierCurve: true,
-      scaleLineColor: "rgba(204, 44, 44, 0.9)",
+      scaleLineColor: "rgba(255, 255, 255, 1)",
+      showScale: true,
+      scaleOverride: true,
+      scaleSteps: 7,
+      scaleStepWidth: 20,
+      scaleStartValue: 60,
+
     });
 
     var ctx = document.getElementById("tab_speed_ml").getContext("2d");
     window.tabSpeedMl = new Chart(ctx).Line(data, {
+          scaleShowGridLines : true,
       responsive : true,
       bezierCurve: true,
-      scaleLineColor: "rgba(204, 44, 44, 0.9)",
+      scaleLineColor: "rgba(255, 255, 255, 1)",
+      showScale: true,
+      scaleOverride: true,
+      scaleSteps: 7,
+      scaleStepWidth: 2,
+      scaleStartValue: 4,
+
     });
 
     var ctx = document.getElementById("tab_dist_ml").getContext("2d");
-    window.tabDistMl = new Chart(ctx).Doughnut(dataDistance, {
+    window.tabDistMl = new Chart(ctx).Doughnut(null, {
       responsive : true,
       animationSteps: 1,
       animateScale : false,
@@ -354,21 +355,33 @@
     window.tabHrLj = new Chart(ctx).Line(data, {
       responsive : true,
       bezierCurve: true,
-      scaleLineColor: "rgba(204, 44, 44, 0.9)",
+      scaleLineColor: "rgba(255, 255, 255, 1)",
+      showScale: true,
+      scaleOverride: true,
+      scaleSteps: 7,
+      scaleStepWidth: 20,
+      scaleStartValue: 60,
+
     });
 
     var ctx = document.getElementById("tab_speed_lj").getContext("2d");
     window.tabSpeedLj = new Chart(ctx).Line(data, {
       responsive : true,
       bezierCurve: true,
-      scaleLineColor: "rgba(204, 44, 44, 0.9)",
+      scaleLineColor: "rgba(255, 255, 255, 1)",
+      showScale: true,
+      scaleOverride: true,
+      scaleSteps: 7,
+      scaleStepWidth: 2,
+      scaleStartValue: 4,
     });
 
     var ctx = document.getElementById("tab_dist_lj").getContext("2d");
-    window.tabDistLj = new Chart(ctx).Doughnut(dataDistance, {
+    window.tabDistLj = new Chart(ctx).Doughnut(null, {
         responsive : true,
         animationSteps: 1,
         animateScale : false,
+
       });
 
     clock = $('.marathon-clock').FlipClock({
@@ -442,15 +455,21 @@
       </div>
       <div class="col2">
         <h3>Landreau</h3>
+        <h6>Fréquence cardiaque</h6>
         <p><canvas id="tab_hr_ml"></p>
+          <h6>Vitesse ( en km/h)</h6>
             <p><canvas id="tab_speed_ml"></p>
+              <h6>Distance</h6>
                 <p><canvas id="tab_dist_ml"></p>
 
       </div>
             <div class="col3">
               <h3>Jalabert</h3>
+              <h6>Fréquence cardiaque</h6>
               <p><canvas id="tab_hr_lj"></p>
+                <h6>Vitesse ( en km/h)</h6>
                   <p><canvas id="tab_speed_lj"></p>
+                    <h6>Distance</h6>
                         <p><canvas id="tab_dist_lj"></p>
 
                   </div>
