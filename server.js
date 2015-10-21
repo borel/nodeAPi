@@ -225,7 +225,7 @@ function sendDataTest(dist){
 
   hrLJ = hrLj;
   hrML = hrMl;
-  
+
   io.sockets.emit('add_marker',{user:'lj' , lat:latLj , long:longLj , hr:round(hrLj,0), speed:round(speedLj,1)  ,distance:dist});
   io.sockets.emit('add_marker',{user:'ml' , lat:latMl , long:longMl , hr:round(hrMl,0) , speed:round(speedMl,1) ,distance:dist});
 }
@@ -283,6 +283,7 @@ function initValue(){
   console.log('HR');
   console.log(hrLJ);
   console.log(hrLJ);
+  
   io.sockets.emit('init_value',{distanceLJ:distanceLJ,distanceML:distanceML,speedLJ:speedLJ,speedML:speedML,hrLJ:hrLJ,hrML:hrLJ});
 }
 
