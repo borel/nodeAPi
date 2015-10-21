@@ -280,8 +280,14 @@ Wide styles
 
 /*** My CSS ***/
 #map-canvas  {
-	position: relative;
+			position: relative;
         padding-bottom: 80%; // This is the aspect ratio
         height: 0;
         overflow: hidden;
 	}
+
+
+	#clock-canvas{
+			zoom: 0.6;
+-		moz-transform: scale(0.6)
+}
