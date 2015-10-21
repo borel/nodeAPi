@@ -44,28 +44,36 @@ router.get('/', function(req, res) {
 router.route('/data/marker/ml/add')
 //add
 .post(function (req, res) {
-  io.sockets.emit('add_marker',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:round(req.body.values.hr) ,speed: round(req.body.values.speed * 3.6,1),distance:req.body.values.distance});
+  console.log("marker/ml/add=>Value");
+  console.log(req.body);
+  io.sockets.emit('add_marker',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:round(req.body.values.hr,0) ,speed: round(req.body.values.speed * 3.6,1),distance:req.body.values.distance});
   res.send(200, 'Marker call');
 });
 
 router.route('/data/marker/lj/add')
 //add
 .post(function (req, res) {
-  io.sockets.emit('add_marker',{user:'lj' , lat:req.body.values.lat , long:req.body.values.long , hr:round(req.body.values.hr) , speed:round(req.body.values.speed * 3.6,1),distance:req.body.values.distance});
+  console.log("marker/lj/add=>Value");
+  console.log(req.body);
+  io.sockets.emit('add_marker',{user:'lj' , lat:req.body.values.lat , long:req.body.values.long , hr:round(req.body.values.hr,0) , speed:round(req.body.values.speed * 3.6,1),distance:req.body.values.distance});
   res.send(200, 'Marker call');
 });
 
 router.route('/data/lj/add')
 //add
 .post(function (req, res) {
-  addDataTable('lj',req.body.values.distance,req.body.values.tklk, round(req.body.values.speedlk,1), round(req.body.values.hrlk));
+  console.log("km/lj/add=>Value");
+  console.log(req.body);
+  addDataTable('lj',req.body.values.distance,req.body.values.tklk, round(req.body.values.speedlk,1), round(req.body.values.hrlk,0));
   res.send(200, 'Data add');
 });
 
 router.route('/data/ml/add')
 //add
 .post(function (req, res) {
-  addDataTable('ml',req.body.values.distance,req.body.values.tklk,round(req.body.values.speedlk,1), round(req.body.values.hrlk));
+  console.log("km/ml/add=>Value");
+  console.log(req.body);
+  addDataTable('ml',req.body.values.distance,req.body.values.tklk,round(req.body.values.speedlk,1), round(req.body.values.hrlk,0));
   res.send(200, 'Data add');
 });
 
@@ -124,9 +132,12 @@ router.route('/test/stop')
   clearInterval(sendDataKm);
   clearInterval(sendData);
 
-  //init var
+  // init var
   datasML = new Array();
   datasLJ = new Array();
+
+  // stop clok
+  io.sockets.emit('stop_clock');
 
   res.send(200, 'test_stop');
 });
