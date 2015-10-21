@@ -188,6 +188,124 @@ app.use('/api', router);
 
 
 ///////////////////////////////
+// Data managemet
+//////////////////////////////////
+
+function addDataTable(user,distance,tklk,speedlk,hrlk){
+    // Calcul km
+    nbk = Math.floor((distance+100)/1000);
+
+    // Convert value to right format
+    speedlk = round(speedlk * 3.6,1);
+    hrlk = round(hrlk,0);
+    tklk = secondsToTime(tklk);
+    time = getTimeSinceBegining();
+
+    if(user === 'lj'){
+      // Send data the first time
+      if(datasLJ[nbk] == null){
+        // emit the socket
+        io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:tklk,speedlk:speedlk,hrlk:hrlk});
+      }else{
+        // we take the first time for each km
+        time =  datasLJ[nbk][0];
+      }
+      var tableKm = [time,tklk,speedlk,hrlk];
+      datasLJ[nbk] = tableKm;
+    }else{
+      // Send data the first time
+      if(datasML[nbk] == null){
+        // emit the socket
+        io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:tklk,speedlk:speedlk,hrlk:hrlk});
+      }else{
+        // we take the first time for each km
+        time =  datasLJ[nbk][0];
+      }
+      datasML[nbk] = tableKm;
+    }
+}
+
+function initTimerMarathon(){
+  if(startMarathonDate != null){
+    var timer = (new Date() - startMarathonDate) / 1000;
+    io.sockets.emit('init_clock',timer);
+  }
+}
+
+function getTimeSinceBegining(){
+  return   secondsToTime((new Date() - startMarathonDate) / 1000) ;
+}
+
+function initTablekm(){
+  io.sockets.emit('init_data_table_lj',datasLJ);
+  io.sockets.emit('init_data_table_ml',datasML);
+}
+
+function initValue(){
+  console.log('Distance');
+  console.log(distanceLJ);
+  console.log(distanceML);
+  io.sockets.emit('init_value',{distanceLJ:distanceLJ,distanceML:distanceML});
+}
+
+///////////////////////////////
+// End Data Management
+//////////////////////////////////
+
+///////////////////////////////
+// Utils
+//////////////////////////////////
+
+function round(value, decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
+
+function secondsToTime(secs)
+{
+    secs = Math.round(secs);
+    var hours = Math.floor(secs / (60 * 60));
+
+    var divisor_for_minutes = secs % (60 * 60);
+    var minutes = Math.floor(divisor_for_minutes / 60);
+
+    var divisor_for_seconds = divisor_for_minutes % 60;
+    var seconds = Math.ceil(divisor_for_seconds);
+
+    var obj = {
+        "h": hours,
+        "m": minutes,
+        "s": seconds
+    };
+    return obj;
+}
+
+///////////////////////////////
+// END Utils
+//////////////////////////////////
+
+// Quand on client se connecte, on renseigne le graph
+io.sockets.on('connection', function (socket) {
+  // init table jm
+  initTablekm();
+  //calcul timer
+  initTimerMarathon();
+  //init value on conection
+  initValue();
+
+});
+
+// For hosing on Heroku
+io.configure(function () {
+  io.set("transports", ["xhr-polling"]);
+  io.set("polling duration", 2);
+  io.set('log level', 1)
+});
+
+
+
+
+///////////////////////////////
 // TEST
 //////////////////////////////////
 function sendDataTestKm(distance){
@@ -233,109 +351,3 @@ function sendDataTest(dist){
 ///////////////////////////////
 // END TEST
 //////////////////////////////////
-
-
-///////////////////////////////
-// Data managemet
-//////////////////////////////////
-
-function addDataTable(user,distance,tklk,speedlk,hrlk){
-    // Calcul km
-    nbk = Math.floor((distance+100)/1000);
-
-    // Convert value to right format
-    speedlk = round(speedlk * 3.6,1);
-    hrlk = round(hrlk,0);
-    tklk = secondsToTime(tklk);
-    time = getTimeSinceBegining();
-
-    var tableKm = [time,tklk,speedlk,hrlk];
-    if(user === 'lj'){
-      // Send data the first time
-      if(datasLJ[nbk] == null){
-        // emit the socket
-        io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:tklk,speedlk:speedlk,hrlk:hrlk});
-      }
-      datasLJ[nbk] = tableKm;
-    }else{
-      // Send data the first time
-      if(datasML[nbk] == null){
-        // emit the socket
-        io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:tklk,speedlk:speedlk,hrlk:hrlk});
-      }
-      datasML[nbk] = tableKm;
-    }
-}
-
-function initTimerMarathon(){
-  if(startMarathonDate != null){
-    var timer = (new Date() - startMarathonDate) / 1000;
-    io.sockets.emit('init_clock',timer);
-  }
-}
-
-function getTimeSinceBegining(){
-  return   secondsToTime((new Date() - startMarathonDate) / 1000) ;
-}
-
-function initTablekm(){
-  io.sockets.emit('init_data_table_lj',datasLJ);
-  io.sockets.emit('init_data_table_ml',datasML);
-}
-
-function initValue(){
-  console.log('Distance');
-  console.log(distanceLJ);
-  console.log(distanceML);
-  io.sockets.emit('init_value',{distanceLJ:distanceLJ,distanceML:distanceML});
-}
-
-///////////////////////////////
-// Data managemet
-//////////////////////////////////
-
-function round(value, decimals) {
-    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
-}
-
-
-function secondsToTime(secs)
-{
-    secs = Math.round(secs);
-    var hours = Math.floor(secs / (60 * 60));
-
-    var divisor_for_minutes = secs % (60 * 60);
-    var minutes = Math.floor(divisor_for_minutes / 60);
-
-    var divisor_for_seconds = divisor_for_minutes % 60;
-    var seconds = Math.ceil(divisor_for_seconds);
-
-    var obj = {
-        "h": hours,
-        "m": minutes,
-        "s": seconds
-    };
-    return obj;
-}
-
-///////////////////////////////
-// END ROUTING
-//////////////////////////////////
-
-// Quand on client se connecte, on renseigne le graph
-io.sockets.on('connection', function (socket) {
-  // init table jm
-  initTablekm();
-  //calcul timer
-  initTimerMarathon();
-  //init value on conection
-  initValue();
-
-});
-
-// For hosing on Heroku
-io.configure(function () {
-  io.set("transports", ["xhr-polling"]);
-  io.set("polling duration", 2);
-  io.set('log level', 1)
-});
