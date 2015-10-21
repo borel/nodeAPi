@@ -152,7 +152,7 @@ router.route('/test/start')
   startMarathonDate = new Date();
 
   sendData = setInterval(function() {
-    dist = dist + 3002;
+    dist = dist + 1002;
     sendDataTest(dist);
   }, 10000);
 
@@ -219,7 +219,7 @@ function addDataTable(user,distance,tklk,speedlk,hrlk){
         io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:tklk,speedlk:speedlk,hrlk:hrlk});
       }else{
         // we take the first time for each km
-        time =  datasLJ[nbk][0];
+        time =  datasML[nbk][0];
       }
       datasML[nbk] = tableKm;
     }

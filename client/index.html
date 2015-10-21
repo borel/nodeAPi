@@ -120,51 +120,44 @@
 
 
   function updateIndicator(name,hr,speed,distance){
-
     if(name === 'lj'){
-
       // incrmeent the display token
       countLJ++;
-
-      // document.getElementById("lj_hr").textContent = hr;
-      // document.getElementById("lj_speed").textContent = speed;
-      // document.getElementById("lj_distance").textContent = distance;
-      //
+      // Update graph
       window.tabHrLj.addData([hr], "");
       window.tabSpeedLj.addData([speed], "");
       updateChartData(window.tabDistLj,distance);
-
       // if there is already 10 value , we delete the first value
       if(countLJ > 10){
         window.tabHrLj.removeData();
         window.tabSpeedLj.removeData();
       }
-      //
+      //Update graph
       window.tabHrLj.update();
       window.tabSpeedLj.update();
-
-
+      //Update labels
+      document.getElementById('hr_lj').textContent = hr + ' BPM';
+      document.getElementById('speed_lj').textContent = speed + ' km/h';
+      document.getElementById('distance_lj').textContent = distance + ' métres';
     }else{
       // incrmeent the display token
       countML++;
-
-      // document.getElementById("ml_hr").textContent = hr;
-      // document.getElementById("ml_speed").textContent = speed;
-      // document.getElementById("ml_distance").textContent = distance;
-      //
+      // Update graph
       window.tabHrMl.addData([hr], "");
       window.tabSpeedMl.addData([speed], "");
       updateChartData(window.tabDistMl,distance);
-
       // if there is already 10 value , we delete the first value
       if(countML > 10){
         window.tabHrMl.removeData();
         window.tabSpeedMl.removeData();
       }
-      //
+      //update graph
       window.tabSpeedMl.update();
       window.tabHrMl.update();
-
+      //Update labels
+      document.getElementById('hr_ml').textContent = hr + ' FC';
+      document.getElementById('speed_ml').textContent = speed + ' km/h';
+      document.getElementById('distance_ml').textContent = distance + ' métres';
     }
 
 
@@ -204,7 +197,8 @@
   function addDataKm(nbk,user,time,tklk,speedlk,hrlk)
   {
     var newRow = document.createElement('tr');
-    newRow.innerHTML = '  <th scope="row">'+nbk+'</th>  <td>'+time.h+'h'+time.m+'m'+time.s+'s</td>   <td>'+tklk.h+'h'+tklk.m+'m'+tklk.s+'s</td>  <td>'+speedlk+'</td>   <td>'+hrlk+'</td>';
+  //  newRow.innerHTML = '  <th scope="row">'+nbk+'</th>  <td>'+time.h+'h'+time.m+'m'+time.s+'s</td>   <td>'+tklk.h+'h'+tklk.m+'m'+tklk.s+'s</td>  <td>'+speedlk+'</td>   <td>'+hrlk+'</td>';
+    newRow.innerHTML = '  <th scope="row">'+nbk+'</th>  <td>'+time.h+'h'+time.m+'m'+time.s+'s</td>   <td>'+tklk.h+'h'+tklk.m+'m'+tklk.s+'s</td>';
     if(user === 'lj'){
       document.getElementById('table_km_lj').appendChild(newRow);
     }else{
@@ -223,15 +217,27 @@
     chart.removeData();
     chart.removeData();
 
+    var percentToDo
+    var percentDone
+
+    if(distance > 500){
+     percentToDo = Math.round(distance/42195*100);
+     percentDone = 100 - percentToDo
+   }else{
+     percentToDo = 100;
+     percentDone = 0;
+
+   }
+
     chart.addData({
-      value: 42195 - distance,
+      value: percentToDo,
       color:"#ff0000",
       highlight: "#F7464A",
       label: "A faire"
     });
 
     chart.addData({
-      value: distance,
+      value: percentDone,
       color: "#71fc07",
       highlight: "#0cf4c7",
       label: "Fait"
@@ -421,54 +427,58 @@
 
         <a class="twitter-timeline" href="https://twitter.com/GetSmoozi" data-widget-id="656399080990646272">Tweets de @GetSmoozi</a>
       <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-        <h2> Jalabert </h2>
-        <table class="table table-striped" id='table_km_lj'>
-          <thead>
-            <tr>
-              <th>Km</th>
-              <th>Temps total</th>
-              <th>Temps au kilométre</th>
-              <th>Vitesse moyenne</th>
-              <th>FC moyenne</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-        <h2> Landreau </h3>
-          <table class="table table-striped" id="table_km_ml">
-            <thead>
-              <tr>
-                <th>Km</th>
-                <th>Temps total</th>
-                <th>Temps au kilométre</th>
-                <th>Vitesse moyenne</th>
-                <th>FC moyenne</th>
-              </tr>
-            </thead>
-            <tbody>
+        <!-- <h2> Jalabert </h2>
 
-            </tbody>
-          </table>
+        <h2> Landreau </h3> -->
+
       </div>
       <div class="col2">
         <h3>Landreau</h3>
-        <h6>Fréquence cardiaque</h6>
+        <h6>Fréquence cardiaque</h6><h5><div id='hr_ml'></div></h5>
         <p><canvas id="tab_hr_ml"></p>
-          <h6>Vitesse ( en km/h)</h6>
+          <h6>Vitesse</h6><h5> <div id='speed_ml'></div></h5>
             <p><canvas id="tab_speed_ml"></p>
-              <h6>Distance</h6>
+              <h6>Distance</h6> <h5><div id='distance_ml'></div></h5>
                 <p><canvas id="tab_dist_ml"></p>
+                    <h6>Résumé</h6>
+                  <table class="table table-striped" id="table_km_ml">
+                    <thead>
+                      <tr>
+                        <th>Km</th>
+                        <th>Temps total</th>
+                        <th>Temps au kilométre</th>
+                        <!-- <th>Vitesse moyenne</th>
+                        <th>FC moyenne</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                  </table>
 
       </div>
             <div class="col3">
               <h3>Jalabert</h3>
-              <h6>Fréquence cardiaque</h6>
+              <h6>Fréquence cardiaque</h6> <h5><div id='hr_lj'></div></h5></h5></h5>
               <p><canvas id="tab_hr_lj"></p>
-                <h6>Vitesse ( en km/h)</h6>
+                <h6>Vitesse ( en km/h)</h6> <h5><div id='speed_lj'></div></h5></h5>
                   <p><canvas id="tab_speed_lj"></p>
-                    <h6>Distance</h6>
+                    <h6>Distance</h6><h5><div id='distance_lj'></div></h5>
                         <p><canvas id="tab_dist_lj"></p>
+                          <h6>Résumé</h6>
+                          <table class="table table-striped" id='table_km_lj'>
+                            <thead>
+                              <tr>
+                                <th>Km</th>
+                                <th>Temps total</th>
+                                <th>Temps au kilométre</th>
+                                <!-- <th>Vitesse moyenne</th>
+                                <th>FC moyenne</th> -->
+                              </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                          </table>
 
                   </div>
                 </div>
@@ -477,7 +487,7 @@
 
               <div class="footer">
                 <div class="container">
-                  &copy; Copyright 2015 - Smoozi
+                  &copy; <a href="http://www.cityzensciences.fr/">Cityzen Sciences </a> - 2015 -
                 </div>
               </div>
             </body>
