@@ -24,8 +24,16 @@ var startMarathonDate = null;
 var sendData;
 var sendDataKm;
 
-var distanceML = null;
-var distanceLJ = null;
+var distanceML = 0;
+var distanceLJ = 0;
+
+var speedML = 12;
+var speedLJ = 14;
+
+var hrML = 110;
+var hrLJ = 120;
+
+
 
 
 ////////////////////////////////////////
@@ -49,11 +57,22 @@ router.route('/data/marker/ml/add')
 .post(function (req, res) {
   console.log("marker/ml/add=>Value");
   console.log(req.body);
-  //store the distance
-  distanceLJ  = req.body.values.distance;
+  //store the distance , hr , speed
+  if(req.body.values.distance != null){
+    distanceML  = req.body.values.distance;
+  }
+
+  if(req.body.values.hr != null){
+    hrML  = round(req.body.values.hr,0);
+  }
+
+  if(req.body.values.speed != null){
+    speedML  = round(req.body.values.speed * 3.6,1);
+  }
+
   //Emit io
-  io.sockets.emit('add_marker',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:round(req.body.values.hr,0) ,speed: round(req.body.values.speed * 3.6,1),distance:req.body.values.distance});
-  res.send(200, 'Marker call');
+  io.sockets.emit('add_marker',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:hrML ,speed:speedML ,distance:distanceML});
+  res.send(200, 'OK');
 });
 
 router.route('/data/marker/lj/add')
@@ -61,11 +80,22 @@ router.route('/data/marker/lj/add')
 .post(function (req, res) {
   console.log("marker/lj/add=>Value");
   console.log(req.body);
-  //store the distance
-  distanceML  = req.body.values.distance;
-  //emit io
-  io.sockets.emit('add_marker',{user:'lj' , lat:req.body.values.lat , long:req.body.values.long , hr:round(req.body.values.hr,0) , speed:round(req.body.values.speed * 3.6,1),distance:req.body.values.distance});
-  res.send(200, 'Marker call');
+  //store the distance , hr , speed
+  if(req.body.values.distance != null){
+    distanceLJ  = req.body.values.distance;
+  }
+
+  if(req.body.values.hr != null){
+    hrLJ  = round(req.body.values.hr,0);
+  }
+
+  if(req.body.values.speed != null){
+    speedLJ  = round(req.body.values.speed * 3.6,1);
+  }
+
+  //Emit io
+  io.sockets.emit('add_marker',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:hrLJ ,speed:speedLJ ,distance:distanceLJ});
+  res.send(200, 'OK');
 });
 
 router.route('/data/lj/add')
@@ -74,7 +104,7 @@ router.route('/data/lj/add')
   console.log("km/lj/add=>Value");
   console.log(req.body);
   addDataTable('lj',req.body.values.distance,req.body.values.tklk, round(req.body.values.speedlk,1), round(req.body.values.hrlk,0));
-  res.send(200, 'Data add');
+  res.send(200, 'OK');
 });
 
 router.route('/data/ml/add')
@@ -83,7 +113,7 @@ router.route('/data/ml/add')
   console.log("km/ml/add=>Value");
   console.log(req.body);
   addDataTable('ml',req.body.values.distance,req.body.values.tklk,round(req.body.values.speedlk,1), round(req.body.values.hrlk,0));
-  res.send(200, 'Data add');
+  res.send(200, 'OK');
 });
 
 
@@ -92,14 +122,14 @@ router.route('/clock/start')
 .post(function (req, res) {
   startMarathonDate = new Date();
   initTimerMarathon();
-  res.send(200, 'chrono_start');
+  res.send(200, 'OK');
 });
 
 router.route('/clock/stop')
 //add
 .post(function (req, res) {
   io.sockets.emit('stop_clock');
-  res.send(200, 'chrono_stop');
+  res.send(200, 'OK');
 });
 
 
@@ -107,7 +137,7 @@ router.route('/message/add')
 //add
 .post(function (req, res) {
   io.sockets.emit('start_message',{message:req.body.message});
-  res.send(200, 'start_message');
+  res.send(200, 'OK');
 });
 
 router.route('/test/start')
@@ -132,7 +162,7 @@ router.route('/test/start')
     sendDataTestKm(distance);
   }, 20000);
 
-  res.send(200, 'test_start');
+  res.send(200, 'OK');
 });
 
 
@@ -148,7 +178,7 @@ router.route('/test/stop')
   // stop clok
   io.sockets.emit('stop_clock');
 
-  res.send(200, 'test_stop');
+  res.send(200, 'OK');
 });
 
 app.use('/api', router);
@@ -162,14 +192,14 @@ app.use('/api', router);
 //////////////////////////////////
 function sendDataTestKm(distance){
 
-  var hrLj = 130 + (Math.random() * 10);
-  var hrMl = 110 + (Math.random() * 10);
+  var testHrLj = 130 + (Math.random() * 10);
+  var testHrMl = 110 + (Math.random() * 10);
 
-  var speedLj = 5 + (Math.random() * 1);
-  var speedMl = 4 + (Math.random() * 1);
+  var testSpeedLj = 5 + (Math.random() * 1);
+  var testSpeedMl = 4 + (Math.random() * 1);
 
-  addDataTable('lj',distance,"4'12",speedLj,hrLj);
-  addDataTable('ml',distance,"5'12",speedLj,hrLj);
+  addDataTable('lj',distance,"312",testSpeedLj,testHrLj);
+  addDataTable('ml',distance,"412",testSpeedLj,testHrMl);
 }
 
 
@@ -187,7 +217,15 @@ function sendDataTest(dist){
   var longLj = 4.953425025939941+ (Math.random() / 100);
   var latLj = 45.759 + (Math.random() / 100);
 
+  distanceLJ = dist;
+  distanceML = dist;
 
+  speedML = speedMl;
+  speedLJ = speedLj;
+
+  hrLJ = hrLj;
+  hrML = hrMl;
+  
   io.sockets.emit('add_marker',{user:'lj' , lat:latLj , long:longLj , hr:round(hrLj,0), speed:round(speedLj,1)  ,distance:dist});
   io.sockets.emit('add_marker',{user:'ml' , lat:latMl , long:longMl , hr:round(hrMl,0) , speed:round(speedMl,1) ,distance:dist});
 }
@@ -203,12 +241,12 @@ function sendDataTest(dist){
 
 function addDataTable(user,distance,tklk,speedlk,hrlk){
     // Calcul km
-    nbk = Math.floor(distance/1000);
+    nbk = Math.floor((distance+100)/1000);
 
     //Callcul time
     time = getTimeSinceBegining();
 
-    var tableKm = [time,tklk,round(speedlk,1),round(hrlk,0)];
+    var tableKm = [time,secondsToTime(tklk),round(speedlk,1),round(hrlk,0)];
     if(user === 'lj'){
       datasLJ[nbk] = tableKm;
     }else{
@@ -216,7 +254,7 @@ function addDataTable(user,distance,tklk,speedlk,hrlk){
     }
 
     // emit the socket
-    io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:tklk,speedlk:round(speedlk,1),hrlk:round(hrlk,0)});
+    io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:secondsToTime(tklk),speedlk:round(speedlk,1),hrlk:round(hrlk,0)});
 }
 
 function initTimerMarathon(){
@@ -235,12 +273,17 @@ function initTablekm(){
   io.sockets.emit('init_data_table_ml',datasML);
 }
 
-function initDistance(){
-  var distances = new Array();
-  distances.distanceML = distanceML;
-  distances.distanceLJ = distanceLJ;
-
-  io.sockets.emit('init_distance',distances);
+function initValue(){
+  console.log('Distance');
+  console.log(distanceLJ);
+  console.log(distanceML);
+  console.log('Speed');
+  console.log(speedLJ);
+  console.log(speedML);
+  console.log('HR');
+  console.log(hrLJ);
+  console.log(hrLJ);
+  io.sockets.emit('init_value',{distanceLJ:distanceLJ,distanceML:distanceML,speedLJ:speedLJ,speedML:speedML,hrLJ:hrLJ,hrML:hrLJ});
 }
 
 ///////////////////////////////
@@ -281,8 +324,8 @@ io.sockets.on('connection', function (socket) {
   initTablekm();
   //calcul timer
   initTimerMarathon();
-  //init distance
-  initDistance()
+  //init value on conection
+  initValue();
 
 });
 

@@ -217,7 +217,7 @@
   function addDataKm(nbk,user,time,tklk,speedlk,hrlk)
   {
       var newRow = document.createElement('tr');
-      newRow.innerHTML = '  <th scope="row">'+nbk+'</th>  <td>'+time.h+'h'+time.m+'m'+time.s+'s</td>   <td>'+tklk+'</td>   <td>'+speedlk+'</td>   <td>'+hrlk+'</td>';
+      newRow.innerHTML = '  <th scope="row">'+nbk+'</th>  <td>'+time.h+'h'+time.m+'m'+time.s+'s</td>   <td>'+tklk.h+'h'+tklk.m+'m'+tklk.s+'s</td>  <td>'+speedlk+'</td>   <td>'+hrlk+'</td>';
     if(user === 'lj'){
       document.getElementById('table_km_lj').appendChild(newRow);
     }else{
@@ -237,7 +237,7 @@
     chart.removeData();
 
     chart.addData({
-      value: 42200 - distance,
+      value: 42195 - distance,
       color:"#F7464A",
       highlight: "#FF5A5E",
       label: "A faire"
@@ -297,11 +297,12 @@
     }
   })
 
+  socket.on('init_value', function(data) {
 
-  socket.on('init_distance', function(data) {
-      updateChartData(window.tabDistLj,data.distanceLj);
-      updateChartData(window.tabDistMl,data.distanceMl);
+      updateIndicator('lj',data.hrLJ,data.speedLJ,data.distanceLJ);
+      updateIndicator('ml',data.hrML,data.speedML,data.distanceML);
   })
+
 
   socket.on('init_clock', function(data) {
     clock.setTime(data);
