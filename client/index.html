@@ -106,9 +106,9 @@
 
     // Img management
     if(name === 'lj'){
-      marker.setIcon('./img/tuile_jalabert.png')
+      marker.setIcon('./img/tuile_lj.png')
     }else{
-      marker.setIcon('./img/tuile_landreau.png')
+      marker.setIcon('./img/tuile_ml.png')
     }
 
     // affect set marker
@@ -155,7 +155,7 @@
       window.tabSpeedMl.update();
       window.tabHrMl.update();
       //Update labels
-      document.getElementById('hr_ml').textContent = hr + ' FC';
+      document.getElementById('hr_ml').textContent = hr + ' BPM';
       document.getElementById('speed_ml').textContent = speed + ' km/h';
       document.getElementById('distance_ml').textContent = distance + ' métres';
     }
@@ -176,7 +176,7 @@
     ],
     datasets: [
       {
-          fillColor: "#000",
+          fillColor: "#0b0f1a",
           strokeColor: "rgba(172, 12, 14, 0.9)",
           pointColor: "rgba(172, 12, 14, 0.9)",
           pointStrokeColor: "rgba(249, 12, 14, 0.9)",
@@ -435,12 +435,15 @@
         	<img class="img-responsive" src="./img/landreau.png" alt="">
               <p></p>
           <img class="img-responsive" src="./img/fc.png" alt=""> Fréquence Cardiaque
+          <p><p>
         <h5><div id='hr_ml'></div></h5>
         <p><canvas id="tab_hr_ml"></p>
-              <img class="img-responsive" src="./img/vitesse.png" alt=""> Vitesse (en km/h)
+              <img class="img-responsive" src="./img/vitesse.png" alt=""> Vitesse
+              <p><p>
           <h5> <div id='speed_ml'></div></h5>
             <p><canvas id="tab_speed_ml"></p>
-                <img class="img-responsive" src="./img/distance.png" alt=""> Distance ( en métres)
+                <img class="img-responsive" src="./img/distance.png" alt=""> Distance
+                <p><p>
                <h5><div id='distance_ml'></div></h5>
                 <p><canvas id="tab_dist_ml"></p>
                     <h6>Résumé</h6>
@@ -465,12 +468,15 @@
             <img class="img-responsive" src="./img/jalabert.png" alt="">
             <p></p>
               <img class="img-responsive" src="./img/fc.png" alt=""> Fréquence Cardiaque
+              <p><p>
                 <h5><div id='hr_lj'></div></h5>
               <p><canvas id="tab_hr_lj"></p>
                   <img class="img-responsive" src="./img/vitesse.png" alt=""> Vitesse (en km/h)
+                  <p><p>
                 <h5><div id='speed_lj'></div></h5></h5>
                   <p><canvas id="tab_speed_lj"></p>
                         <img class="img-responsive" src="./img/distance.png" alt=""> Distance ( en métres)
+                        <p><p>
                     <h5><div id='distance_lj'></div></h5>
                         <p><canvas id="tab_dist_lj"></p>
                           <h6>Résumé</h6>
