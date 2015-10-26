@@ -7,7 +7,7 @@ body
 	margin: 0;
 	padding: 0;
 	color: #333;
-	background-color: #eee;
+	background-color: #0b0f1a;
 	font: 1em/1.2 "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
 }
 
@@ -84,7 +84,7 @@ Layout styles
 .header
 {
 	color: #fff;
-	background: #000;
+	background: #0b0f1a;
 	padding: 1em 1.25em;
 }
 
@@ -92,7 +92,7 @@ Layout styles
 
 .nav-bar
 {
-	background: #000;
+	background: #0b0f1a;
 	padding: 0;
 }
 
@@ -100,7 +100,7 @@ Layout styles
 {
 	overflow: hidden;
 	padding: 1em 1.25em;
-	background-color: #000;
+	background-color: #0b0f1a;
 }
 
 .col1,.col2,.col3
@@ -111,7 +111,7 @@ Layout styles
 .footer
 {
 	color: #fff;
-	background: #000;
+	background: #0b0f1a;
 	padding: 1em 1.25em;
 }
 

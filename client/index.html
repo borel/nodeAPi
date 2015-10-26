@@ -106,9 +106,9 @@
 
     // Img management
     if(name === 'lj'){
-      //marker.setIcon('./img/LJ.png')
+      marker.setIcon('./img/tuile_jalabert.png')
     }else{
-      //marker.setIcon('./img/ML.png')
+      marker.setIcon('./img/tuile_landreau.png')
     }
 
     // affect set marker
@@ -406,7 +406,7 @@
 
   <div class="header">
     <div class="container">
-      <h1 class="header-heading">Smoozi</h1>
+      <img class="img-responsive" src="./img/bandeau.jpg" alt="">
     </div>
   </div>
   <div class="nav-bar">
@@ -421,6 +421,7 @@
       <div class="col1">
         <!-- Responsive images -->
         <div id="map-canvas"></div>
+
         <div id="clock-canvas"  class="marathon-clock"></div>
 
         <a class="twitter-timeline" href="https://twitter.com/GetSmoozi" data-widget-id="656399080990646272">Tweets de @GetSmoozi</a>
@@ -431,12 +432,16 @@
 
       </div>
       <div class="col2">
-        <h3>Landreau</h3>
-        <h6>Fréquence cardiaque</h6><h5><div id='hr_ml'></div></h5>
+        	<img class="img-responsive" src="./img/landreau.png" alt="">
+              <p></p>
+          <img class="img-responsive" src="./img/fc.png" alt=""> Fréquence Cardiaque
+        <h5><div id='hr_ml'></div></h5>
         <p><canvas id="tab_hr_ml"></p>
-          <h6>Vitesse</h6><h5> <div id='speed_ml'></div></h5>
+              <img class="img-responsive" src="./img/vitesse.png" alt=""> Vitesse (en km/h)
+          <h5> <div id='speed_ml'></div></h5>
             <p><canvas id="tab_speed_ml"></p>
-              <h6>Distance</h6> <h5><div id='distance_ml'></div></h5>
+                <img class="img-responsive" src="./img/distance.png" alt=""> Distance ( en métres)
+               <h5><div id='distance_ml'></div></h5>
                 <p><canvas id="tab_dist_ml"></p>
                     <h6>Résumé</h6>
                   <table class="table table-striped" id="table_km_ml">
@@ -457,12 +462,15 @@
 
       </div>
             <div class="col3">
-              <h3>Jalabert</h3>
-              <h6>Fréquence cardiaque</h6> <h5><div id='hr_lj'></div></h5></h5></h5>
+            <img class="img-responsive" src="./img/jalabert.png" alt="">
+            <p></p>
+              <img class="img-responsive" src="./img/fc.png" alt=""> Fréquence Cardiaque 
               <p><canvas id="tab_hr_lj"></p>
-                <h6>Vitesse ( en km/h)</h6> <h5><div id='speed_lj'></div></h5></h5>
+                  <img class="img-responsive" src="./img/vitesse.png" alt=""> Vitesse (en km/h)
+                <h5><div id='speed_lj'></div></h5></h5>
                   <p><canvas id="tab_speed_lj"></p>
-                    <h6>Distance</h6><h5><div id='distance_lj'></div></h5>
+                        <img class="img-responsive" src="./img/distance.png" alt=""> Distance ( en métres)
+                    <h5><div id='distance_lj'></div></h5>
                         <p><canvas id="tab_dist_lj"></p>
                           <h6>Résumé</h6>
                           <table class="table table-striped" id='table_km_lj'>
