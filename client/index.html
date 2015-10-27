@@ -137,9 +137,18 @@
       window.tabHrLj.update();
       window.tabSpeedLj.update();
       //Update labels
-      document.getElementById('hr_lj').textContent = hr + ' BPM';
-      document.getElementById('speed_lj').textContent = speed + ' km/h';
-      document.getElementById('distance_lj').textContent = distance + ' métres';
+      if(hr != null){
+        document.getElementById('hr_lj').textContent = hr + ' BPM';
+      }
+
+      if(speed != null){
+        document.getElementById('speed_lj').textContent = speed + ' km/h';
+      }
+
+      if(distance != null){
+        document.getElementById('distance_lj').textContent = distance + ' métres';
+      }
+      
     }else{
       // incrmeent the display token
       countML++;
@@ -155,10 +164,19 @@
       //update graph
       window.tabSpeedMl.update();
       window.tabHrMl.update();
-      //Update labels
-      document.getElementById('hr_ml').textContent = hr + ' BPM';
-      document.getElementById('speed_ml').textContent = speed + ' km/h';
-      document.getElementById('distance_ml').textContent = distance + ' métres';
+      //Update labels if necessary
+      if(hr != null){
+        document.getElementById('hr_ml').textContent = hr + ' BPM';
+      }
+
+      if(speed != null){
+        document.getElementById('speed_ml').textContent = speed + ' km/h';
+      }
+
+      if(distance != null){
+        document.getElementById('distance_ml').textContent = distance + ' métres';
+      }
+
     }
 
 

@@ -181,7 +181,7 @@ router.route('/test/start')
 
   var dist = 0;
   var distance = 0;
-  startMarathonDate = new Date();
+
 
   sendData = setInterval(function() {
     dist = dist + 502;
@@ -231,7 +231,7 @@ function addDataTable(user,distance,tklk,speedlk,hrlk){
     speedlk = round(speedlk * 3.6,1);
     hrlk = round(hrlk,0);
     tklk = secondsToTime(tklk);
-    time = getTimeSinceBegining();
+    time = getTimeSinceBegining(user);
 
     if(user === 'lj'){
       // Send data the first time
@@ -261,17 +261,24 @@ function addDataTable(user,distance,tklk,speedlk,hrlk){
 function initTimerMarathon(){
   if(startMarathonDateML != null){
     var timer = (new Date() - startMarathonDateML) / 1000;
-    io.sockets.emit('init_clock_lj',timer);
+    io.sockets.emit('init_clock_ml',timer);
   }
 
   if(startMarathonDateLJ != null){
     var timer = (new Date() - startMarathonDateLJ) / 1000;
-    io.sockets.emit('init_clock_ml',timer);
+    io.sockets.emit('init_clock_lj',timer);
   }
 }
 
-function getTimeSinceBegining(){
-  return   secondsToTime((new Date() - startMarathonDate) / 1000) ;
+function getTimeSinceBegining(user){
+  var date = null;
+  if(user === 'lj'){
+      date = startMarathonDateLJ
+  }else {
+      date = startMarathonDateML
+  }
+
+  return   secondsToTime((new Date() - date) / 1000) ;
 }
 
 function initTablekm(){
