@@ -31,11 +31,11 @@ var sendDataKm;
 var distanceML = 0;
 var distanceLJ = 0;
 
-var speedML = 12;
-var speedLJ = 14;
+var speedML = null;
+var speedLJ = null;
 
-var hrML = 110;
-var hrLJ = 120;
+var hrML = null;
+var hrLJ = null;
 
 
 
