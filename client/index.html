@@ -318,14 +318,27 @@
 
 
   socket.on('init_clock_lj', function(data) {
-    clock_lj.setTime(data);
-    clock_lj.start();
+    clock_lj.setTime(data.timer);
+    if(!data.finish){
+        clock_lj.start();
+    }
   })
 
   socket.on('init_clock_ml', function(data) {
-    clock_ml.setTime(data);
+    clock_ml.setTime(data.timer);
+    if(!data.finish){
+        clock_ml.start();
+    }
+  })
+
+  socket.on('start_clock_lj', function(data) {
+    clock_lj.start();
+  })
+
+  socket.on('start_clock_ml', function(data) {
     clock_ml.start();
   })
+
 
   socket.on('stop_clock_lj', function(data) {
     clock_lj.stop();

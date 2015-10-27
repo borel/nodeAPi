@@ -25,6 +25,9 @@ var datasLJ = new Array();
 var startMarathonDateML = null;
 var startMarathonDateLJ = null;
 
+var endMarathonDateML = null;
+var endMarathonDateLJ = null;
+
 var sendData;
 var sendDataKm;
 
@@ -40,6 +43,7 @@ var hrLJ = null;
 
 
 
+
 ////////////////////////////////////////
 // API routing
 var router = express.Router();              // get an instance of the express Router
@@ -49,13 +53,13 @@ var router = express.Router();              // get an instance of the express Ro
 router.use(function(req, res, next) {
   next(); // make sure we go to the next routes and don't stop here
   // check authorization
-// if(req.headers.authorization != authorizationKey){
-//     console.log('Unauthorized')
-//     res.send(401, 'Unauthorized');
-//   }else{
-//       // do logging
-//       next(); // make sure we go to the next routes and don't stop here
-//   }
+  // if(req.headers.authorization != authorizationKey){
+  //     console.log('Unauthorized')
+  //     res.send(401, 'Unauthorized');
+  //   }else{
+  //       // do logging
+  //       next(); // make sure we go to the next routes and don't stop here
+  //   }
 });
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
@@ -129,28 +133,27 @@ router.route('/data/ml/add')
 
 
 router.route('/clock/ml/start')
-//add
 .post(function (req, res) {
-
+  // Init date
   startMarathonDateML = new Date();
-  initTimerMarathon();
-  res.send(200, 'OK');
 
+  io.sockets.emit('start_clock_ml');
+  res.send(200, 'OK');
 });
 
 router.route('/clock/lj/start')
-//add
 .post(function (req, res) {
-
+  // Init date
   startMarathonDateLJ = new Date();
-  initTimerMarathon();
-  res.send(200, 'OK');
 
+  io.sockets.emit('start_clock_lj');
+  res.send(200, 'OK');
 });
 
 router.route('/clock/ml/stop')
 //add
 .post(function (req, res) {
+  endMarathonDateML = new Date();
   io.sockets.emit('stop_clock_ml');
   res.send(200, 'OK');
 });
@@ -158,6 +161,7 @@ router.route('/clock/ml/stop')
 router.route('/clock/lj/stop')
 //add
 .post(function (req, res) {
+  endMarathonDateLJ = new Date();
   io.sockets.emit('stop_clock_lj');
   res.send(200, 'OK');
 });
@@ -224,58 +228,70 @@ app.use('/api', router);
 //////////////////////////////////
 
 function addDataTable(user,distance,tklk,speedlk,hrlk){
-    // Calcul km
-    nbk = Math.floor((distance+100)/1000);
+  // Calcul km
+  nbk = Math.floor((distance+100)/1000);
 
-    // Convert value to right format
-    speedlk = round(speedlk * 3.6,1);
-    hrlk = round(hrlk,0);
-    tklk = secondsToTime(tklk);
-    time = getTimeSinceBegining(user);
+  // Convert value to right format
+  speedlk = round(speedlk * 3.6,1);
+  hrlk = round(hrlk,0);
+  tklk = secondsToTime(tklk);
+  time = getTimeSinceBegining(user);
 
-    if(user === 'lj'){
-      // Send data the first time
-      if(datasLJ[nbk] == null){
-        // emit the socket
-        io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:tklk,speedlk:speedlk,hrlk:hrlk});
-      }else{
-        // we take the first time for each km
-        time =  datasLJ[nbk][0];
-      }
-      var tableKm = [time,tklk,speedlk,hrlk];
-      datasLJ[nbk] = tableKm;
+  if(user === 'lj'){
+    // Send data the first time
+    if(datasLJ[nbk] == null){
+      // emit the socket
+      io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:tklk,speedlk:speedlk,hrlk:hrlk});
     }else{
-      // Send data the first time
-      if(datasML[nbk] == null){
-        // emit the socket
-        io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:tklk,speedlk:speedlk,hrlk:hrlk});
-      }else{
-        // we take the first time for each km
-        time =  datasML[nbk][0];
-      }
-      var tableKm = [time,tklk,speedlk,hrlk];
-      datasML[nbk] = tableKm;
+      // we take the first time for each km
+      time =  datasLJ[nbk][0];
     }
+    var tableKm = [time,tklk,speedlk,hrlk];
+    datasLJ[nbk] = tableKm;
+  }else{
+    // Send data the first time
+    if(datasML[nbk] == null){
+      // emit the socket
+      io.sockets.emit('add_data_table',{user:user,nbk:nbk,time:time,tklk:tklk,speedlk:speedlk,hrlk:hrlk});
+    }else{
+      // we take the first time for each km
+      time =  datasML[nbk][0];
+    }
+    var tableKm = [time,tklk,speedlk,hrlk];
+    datasML[nbk] = tableKm;
+  }
 }
 
 function initTimerMarathon(){
+
+// if the course is finish , we take the finisth time else we take the currtent time
   if(startMarathonDateML != null){
-    var timer = (new Date() - startMarathonDateML) / 1000;
-    io.sockets.emit('init_clock_ml',timer);
+    if(endMarathonDateML != null){
+      var timer = (endMarathonDateML - startMarathonDateML) / 1000;
+      io.sockets.emit('init_clock_ml',{timer:timer,finish:true});
+    }else{
+      var timer = (new Date() - startMarathonDateML) / 1000;
+      io.sockets.emit('init_clock_ml',{timer:timer,finish:false});
+    }
   }
 
   if(startMarathonDateLJ != null){
-    var timer = (new Date() - startMarathonDateLJ) / 1000;
-    io.sockets.emit('init_clock_lj',timer);
+    if(endMarathonDateLJ != null){
+      var timer = (endMarathonDateLJ - startMarathonDateLJ) / 1000;
+      io.sockets.emit('init_clock_lj',{timer:timer,finish:true});
+    }else{
+      var timer = (new Date() - startMarathonDateLJ) / 1000;
+      io.sockets.emit('init_clock_lj',{timer:timer,finish:false});
+    }
   }
 }
 
 function getTimeSinceBegining(user){
   var date = null;
   if(user === 'lj'){
-      date = startMarathonDateLJ
+    date = startMarathonDateLJ
   }else {
-      date = startMarathonDateML
+    date = startMarathonDateML
   }
 
   return   secondsToTime((new Date() - date) / 1000) ;
@@ -302,36 +318,36 @@ function initValue(){
 //////////////////////////////////
 
 function round(value, decimals) {
-    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 }
 
 
 function secondsToTime(secs)
 {
-    secs = Math.round(secs);
-    var hours = Math.floor(secs / (60 * 60));
-    if(hours < 10){
-      hours = "0"+hours;
-    }
+  secs = Math.round(secs);
+  var hours = Math.floor(secs / (60 * 60));
+  if(hours < 10){
+    hours = "0"+hours;
+  }
 
-    var divisor_for_minutes = secs % (60 * 60);
-    var minutes = Math.floor(divisor_for_minutes / 60);
-    if(minutes < 10){
-      minutes = "0"+minutes;
-    }
+  var divisor_for_minutes = secs % (60 * 60);
+  var minutes = Math.floor(divisor_for_minutes / 60);
+  if(minutes < 10){
+    minutes = "0"+minutes;
+  }
 
-    var divisor_for_seconds = divisor_for_minutes % 60;
-    var seconds = Math.ceil(divisor_for_seconds);
-    if(seconds < 10){
-      seconds = "0"+seconds;
-    }
+  var divisor_for_seconds = divisor_for_minutes % 60;
+  var seconds = Math.ceil(divisor_for_seconds);
+  if(seconds < 10){
+    seconds = "0"+seconds;
+  }
 
-    var obj = {
-        "h": hours,
-        "m": minutes,
-        "s": seconds
-    };
-    return obj;
+  var obj = {
+    "h": hours,
+    "m": minutes,
+    "s": seconds
+  };
+  return obj;
 }
 
 ///////////////////////////////
