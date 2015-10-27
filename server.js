@@ -151,14 +151,14 @@ router.route('/clock/lj/start')
 router.route('/clock/ml/stop')
 //add
 .post(function (req, res) {
-  io.sockets.emit('stop_clock');
+  io.sockets.emit('stop_clock_ml');
   res.send(200, 'OK');
 });
 
 router.route('/clock/lj/stop')
 //add
 .post(function (req, res) {
-  io.sockets.emit('stop_clock');
+  io.sockets.emit('stop_clock_lj');
   res.send(200, 'OK');
 });
 
@@ -398,7 +398,7 @@ function sendDataTest(dist){
   hrLJ = hrLj;
   hrML = hrMl;
 
-  io.sockets.emit('add_marker',{user:'lj' , lat:n , long:longLj , hr:round(hrLj,0), speed:round(speedLj,1)  ,distance:dist});
+  io.sockets.emit('add_marker',{user:'lj' , lat:latLj , long:longLj , hr:round(hrLj,0), speed:round(speedLj,1)  ,distance:dist});
   io.sockets.emit('add_marker',{user:'ml' , lat:latMl , long:longMl , hr:round(hrMl,0) , speed:round(speedMl,1) ,distance:dist});
 }
 

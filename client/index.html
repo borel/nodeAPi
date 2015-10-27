@@ -148,7 +148,7 @@
       if(distance != null){
         document.getElementById('distance_lj').textContent = distance + ' métres';
       }
-      
+
     }else{
       // incrmeent the display token
       countML++;
@@ -252,14 +252,14 @@
       value: percentToDo,
       color:"#f35146",
       highlight: "#f35146",
-      label: "A faire"
+      label: "A faire en %"
     });
 
     chart.addData({
       value: percentDone,
       color: "#cbeb2e",
       highlight: "#cbeb2e",
-      label: "Fait"
+      label: "Fait en %"
     });
 
     chart.update();
@@ -327,11 +327,14 @@
     clock_ml.start();
   })
 
-  socket.on('stop_clock', function(data) {
-    clock_ml.stop();
-
+  socket.on('stop_clock_lj', function(data) {
     clock_lj.stop();
   })
+
+  socket.on('stop_clock_ml', function(data) {
+    clock_ml.stop();
+})
+
 
   socket.on('start_message', function(data) {
     document.getElementById('message').textContent = data.message;
@@ -370,9 +373,9 @@
       scaleLineColor: "rgba(255, 255, 255, 1)",
       showScale: true,
       scaleOverride: true,
-      scaleSteps: 7,
+      scaleSteps: 9,
       scaleStepWidth: 2,
-      scaleStartValue: 4,
+      scaleStartValue: 0,
 
     });
 
@@ -394,7 +397,6 @@
       scaleSteps: 7,
       scaleStepWidth: 20,
       scaleStartValue: 60,
-
     });
 
     var ctx = document.getElementById("tab_speed_lj").getContext("2d");
@@ -404,9 +406,9 @@
       scaleLineColor: "rgba(255, 255, 255, 1)",
       showScale: true,
       scaleOverride: true,
-      scaleSteps: 7,
+      scaleSteps: 9,
       scaleStepWidth: 2,
-      scaleStartValue: 4,
+      scaleStartValue: 0,
     });
 
     var ctx = document.getElementById("tab_dist_lj").getContext("2d");
