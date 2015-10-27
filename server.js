@@ -3,8 +3,11 @@ var app = require('express')(),
 server = require('http').createServer(app),
 io = require('socket.io').listen(server);
 var bodyParser = require('body-parser');
+// Authorisation key - to share with mobile app
+var authorizationKey = '93462404';
 
 server.listen(process.env.PORT || 8082);
+
 
 //Chargement de la page index.html
 app.use(require('express').static(__dirname + '/client'));
@@ -19,7 +22,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 var datasML = new Array();
 var datasLJ = new Array();
 
-var startMarathonDate = null;
+var startMarathonDateML = null;
+var startMarathonDateLJ = null;
 
 var sendData;
 var sendDataKm;
@@ -41,10 +45,17 @@ var hrLJ = 120;
 var router = express.Router();              // get an instance of the express Router
 
 
-// middleware to use for all requests
+// middleware to use for all requests -
 router.use(function(req, res, next) {
-  // do logging
   next(); // make sure we go to the next routes and don't stop here
+  // check authorization
+// if(req.headers.authorization != authorizationKey){
+//     console.log('Unauthorized')
+//     res.send(401, 'Unauthorized');
+//   }else{
+//       // do logging
+//       next(); // make sure we go to the next routes and don't stop here
+//   }
 });
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
@@ -117,15 +128,34 @@ router.route('/data/ml/add')
 });
 
 
-router.route('/clock/start')
+router.route('/clock/ml/start')
 //add
 .post(function (req, res) {
-  startMarathonDate = new Date();
+
+  startMarathonDateML = new Date();
   initTimerMarathon();
+  res.send(200, 'OK');
+
+});
+
+router.route('/clock/lj/start')
+//add
+.post(function (req, res) {
+
+  startMarathonDateLJ = new Date();
+  initTimerMarathon();
+  res.send(200, 'OK');
+
+});
+
+router.route('/clock/ml/stop')
+//add
+.post(function (req, res) {
+  io.sockets.emit('stop_clock');
   res.send(200, 'OK');
 });
 
-router.route('/clock/stop')
+router.route('/clock/lj/stop')
 //add
 .post(function (req, res) {
   io.sockets.emit('stop_clock');
@@ -144,7 +174,9 @@ router.route('/test/start')
 //add
 .post(function (req, res) {
   // init marahton date
-  startMarathonDate = new Date();
+  startMarathonDateML = new Date();
+  startMarathonDateLJ = new Date();
+
   initTimerMarathon();
 
   var dist = 0;
@@ -152,15 +184,15 @@ router.route('/test/start')
   startMarathonDate = new Date();
 
   sendData = setInterval(function() {
-    dist = dist + 1002;
+    dist = dist + 502;
     sendDataTest(dist);
   }, 10000);
 
 
   sendDataKm = setInterval(function() {
-    distance = distance + 2001;
+    distance = distance + 1100;
     sendDataTestKm(distance);
-  }, 20000);
+  }, 15000);
 
   res.send(200, 'OK');
 });
@@ -227,9 +259,14 @@ function addDataTable(user,distance,tklk,speedlk,hrlk){
 }
 
 function initTimerMarathon(){
-  if(startMarathonDate != null){
-    var timer = (new Date() - startMarathonDate) / 1000;
-    io.sockets.emit('init_clock',timer);
+  if(startMarathonDateML != null){
+    var timer = (new Date() - startMarathonDateML) / 1000;
+    io.sockets.emit('init_clock_lj',timer);
+  }
+
+  if(startMarathonDateLJ != null){
+    var timer = (new Date() - startMarathonDateLJ) / 1000;
+    io.sockets.emit('init_clock_ml',timer);
   }
 }
 
@@ -354,7 +391,7 @@ function sendDataTest(dist){
   hrLJ = hrLj;
   hrML = hrMl;
 
-  io.sockets.emit('add_marker',{user:'lj' , lat:latLj , long:longLj , hr:round(hrLj,0), speed:round(speedLj,1)  ,distance:dist});
+  io.sockets.emit('add_marker',{user:'lj' , lat:n , long:longLj , hr:round(hrLj,0), speed:round(speedLj,1)  ,distance:dist});
   io.sockets.emit('add_marker',{user:'ml' , lat:latMl , long:longMl , hr:round(hrMl,0) , speed:round(speedMl,1) ,distance:dist});
 }
 

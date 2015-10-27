@@ -232,15 +232,15 @@
 
     chart.addData({
       value: percentToDo,
-      color:"#ff0000",
-      highlight: "#F7464A",
+      color:"#f35146",
+      highlight: "#f35146",
       label: "A faire"
     });
 
     chart.addData({
       value: percentDone,
-      color: "#71fc07",
-      highlight: "#0cf4c7",
+      color: "#cbeb2e",
+      highlight: "#cbeb2e",
       label: "Fait"
     });
 
@@ -299,12 +299,14 @@
   })
 
 
-  socket.on('init_clock', function(data) {
-    clock_ml.setTime(data);
-    clock_ml.start();
-
+  socket.on('init_clock_lj', function(data) {
     clock_lj.setTime(data);
     clock_lj.start();
+  })
+
+  socket.on('init_clock_ml', function(data) {
+    clock_ml.setTime(data);
+    clock_ml.start();
   })
 
   socket.on('stop_clock', function(data) {
