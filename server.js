@@ -5,7 +5,7 @@ io = require('socket.io').listen(server);
 var bodyParser = require('body-parser');
 // Authorisation key - to share with mobile app
 var authorizationKey = '93462404';
-
+//Laucnh server on 8082
 server.listen(process.env.PORT || 8082);
 
 
@@ -48,24 +48,27 @@ var hrLJ = null;
 // API routing
 var router = express.Router();              // get an instance of the express Router
 
+// Prefix API
+app.use('/api', router);
 
 // middleware to use for all requests -
 router.use(function(req, res, next) {
-  next(); // make sure we go to the next routes and don't stop here
-  // check authorization
-  // if(req.headers.authorization != authorizationKey){
-  //     console.log('Unauthorized')
-  //     res.send(401, 'Unauthorized');
-  //   }else{
-  //       // do logging
-  //       next(); // make sure we go to the next routes and don't stop here
-  //   }
+  //  check authorization
+  if(req.headers.authorization != authorizationKey){
+      console.log('Unauthorized')
+      res.send(401, 'Unauthorized');
+    }else{
+        // do logging
+        next(); // make sure we go to the next routes and don't stop here
+    }
 });
+
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
   res.json({ message: 'hooray! welcome to our api!' });
 });
+
 
 router.route('/data/marker/ml/add')
 //add
@@ -217,7 +220,8 @@ router.route('/test/stop')
   res.send(200, 'OK');
 });
 
-app.use('/api', router);
+
+
 ///////////////////////////////
 // END ROUTING
 //////////////////////////////////
