@@ -88,6 +88,17 @@ router.route('/data/marker/ml/add')
     speedML  = round(req.body.values.speed * 3.6,1);
   }
 
+  // If the clock is not start , then we statck the clock
+  if(startMarathonDateML == null && req.body.values.time != null){
+    //fiwe timestamp and convert to date
+    timestamp = (new Date().getTime() - req.body.values.time);
+    startMarathonDateML = new Date(timestamp);
+
+    // calcul the timer and send to IHM
+    var timer = (new Date() - startMarathonDateML) / 1000;
+    io.sockets.emit('init_clock_ml',{timer:timer,finish:false});
+  }
+
   //Emit io
   io.sockets.emit('add_marker',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:hrML ,speed:speedML ,distance:distanceML});
   res.send(200, 'OK');
@@ -109,6 +120,18 @@ router.route('/data/marker/lj/add')
 
   if(req.body.values.speed != null){
     speedLJ  = round(req.body.values.speed * 3.6,1);
+  }
+
+  // If the clock is not start , then we statck the clock
+  if(startMarathonDateLJ == null && req.body.values.time != null){
+
+    //fiwe timestamp and convert to date
+    timestamp = (new Date().getTime() - req.body.values.time);
+    startMarathonDateLJ = new Date(timestamp);
+
+    // calcul the timer and send to IHM
+    var timer = (new Date() - startMarathonDateLJ) / 1000;
+    io.sockets.emit('init_clock_lj',{timer:timer,finish:false});
   }
 
   //Emit io
