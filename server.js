@@ -130,6 +130,9 @@ router.route('/data/marker/lj/add')
 .post(function (req, res) {
   console.log("marker/lj/add=>Value");
   console.log(req.body);
+  console.log(timer);
+  console.log(timestampLJ);
+  
   //store the distance , hr , speed
   if(req.body.values.distance != null){
     distanceLJ  = req.body.values.distance;
