@@ -85,7 +85,7 @@ router.route('/data/marker/ml/add')
   }
 
   if(req.body.values.speed != null){
-    speedML  = round(req.body.values.speed * 3.6,1);
+    speedML = filterValue(speedML, round(req.body.values.speed * 3.6,1))
   }
 
   // If the clock is not start , then we statck the clock
@@ -119,7 +119,7 @@ router.route('/data/marker/lj/add')
   }
 
   if(req.body.values.speed != null){
-    speedLJ  = round(req.body.values.speed * 3.6,1);
+    speedLJ = filterValue(speedLJ, round(req.body.values.speed * 3.6,1))
   }
 
   // If the clock is not start , then we statck the clock
@@ -343,6 +343,13 @@ function initValue(){
 ///////////////////////////////
 // Utils
 //////////////////////////////////
+function filterValue(oldValue,newValue){
+  if(oldValue != 0 && oldValue != null){
+    var value = 0.85 * oldValue + (1-0.85) * newValue;
+    return round(value,1);
+  }
+  return newValue;
+}
 
 function round(value, decimals) {
   return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
@@ -381,6 +388,11 @@ function secondsToTime(secs)
 // END Utils
 //////////////////////////////////
 
+
+///////////////////////////////
+// IO Configure
+//////////////////////////////////
+
 // Quand on client se connecte, on renseigne le graph
 io.sockets.on('connection', function (socket) {
   // init table jm
@@ -399,7 +411,9 @@ io.configure(function () {
   io.set('log level', 1)
 });
 
-
+///////////////////////////////
+// /IO Configure
+//////////////////////////////////
 
 
 ///////////////////////////////

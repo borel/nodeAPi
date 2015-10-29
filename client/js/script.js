@@ -22,7 +22,7 @@ var users = {};
 function mapInitialize() {
   map = new google.maps.Map(document.getElementById("map-canvas"), {
     zoom: 12,
-    // nyc   center: new google.maps.LatLng(40.742494, -73.953867)
+  // nyc     center: new google.maps.LatLng(40.742494, -73.953867)
     center: new google.maps.LatLng(45.764043, 4.835659)
   });
   infowindow = new google.maps.InfoWindow({ content: 'Test' });
@@ -76,7 +76,7 @@ function createUser(name){
   if(name === 'lj'){
     marker.setIcon('./img/tuile_lj.png')
   }else{
-    marker.setIcon('./img/tuile_ml.png')
+    marker.setIcon('./img/tuile_ns.png')
   }
 
   // affect set marker
@@ -237,94 +237,6 @@ function updateChartData(chart,distance)
 ////////////////////////////////////////////////////////////////////
 
 
-
-////////////////////////////////////////////////////////////////////
-////////////// Socket///////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
-var socket = io.connect('/');
-
-socket.on('add_marker', function(data) {
-  updateMarker(data.user,data.lat,data.long);
-  updateIndicator(data.user,data.hr,data.speed,data.distance);
-})
-
-socket.on('add_data_table', function(data) {
-  addDataKm(data.nbk,data.user,data.time,data.tklk,data.speedlk,data.hrlk);
-})
-
-socket.on('init_data_table_lj', function(data) {
-  //init the tab
-  var tableDataLj = document.getElementById('table_km_lj');
-  while(tableDataLj.childNodes.length>2){tableDataLj.removeChild(tableDataLj.lastChild);}
-
-  //push the data
-  for (index = 1; index < data.length; ++index) {
-     if(data[index] != null){
-       addDataKm(index,'lj',data[index][0],data[index][1],data[index][2],data[index][3]);
-      }
-   }
-})
-
-socket.on('init_data_table_ml', function(data) {
-  //init the tab
-  var tableDataMl = document.getElementById('table_km_ml');
-  while(tableDataMl.childNodes.length>2){tableDataMl.removeChild(tableDataMl.lastChild);}
-
-  //push the data
-  for (index = 1; index < data.length; ++index) {
-    if(data[index] != null){
-     addDataKm(index,'ml',data[index][0],data[index][1],data[index][2],data[index][3]);
-   }
-  }
-})
-
-socket.on('init_value', function(data) {
-  updateChartData(window.tabDistMl,data.distanceML);
-  updateChartData(window.tabDistLj,data.distanceLJ);
-})
-
-
-socket.on('init_clock_lj', function(data) {
-  clock_lj.setTime(data.timer);
-  if(!data.finish){
-      clock_lj.start();
-  }
-})
-
-socket.on('init_clock_ml', function(data) {
-  clock_ml.setTime(data.timer);
-  if(!data.finish){
-      clock_ml.start();
-  }
-})
-
-socket.on('start_clock_lj', function(data) {
-  clock_lj.start();
-})
-
-socket.on('start_clock_ml', function(data) {
-  clock_ml.start();
-})
-
-
-socket.on('stop_clock_lj', function(data) {
-  clock_lj.stop();
-})
-
-socket.on('stop_clock_ml', function(data) {
-  clock_ml.stop();
-})
-
-
-socket.on('start_message', function(data) {
-  document.getElementById('message').textContent = data.message;
-
-})
-
-socket.on('stop_message', function(data) {
-  document.getElementById('message').textContent = "";
-})
-
 ////////////////////////////////////////////////////////////////////
 ////////////// Common ///////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -399,13 +311,105 @@ window.onload = function(){
 
     });
 
-  clock_ml = $('.marathon_clock_ml').FlipClock({
-    autoStart : false
-  });
+    clock_ml = $('.marathon_clock_ml').FlipClock({
+      autoStart : false
+    });
 
-  clock_lj = $('.marathon_clock_lj').FlipClock({
-    autoStart : false
-  });
+    clock_lj = $('.marathon_clock_lj').FlipClock({
+      autoStart : false
+    });
 
 
+
+    /**************/
+    /** Socket ****/
+    /**************/
+
+    var socket = io.connect('/');
+
+    socket.on('init_data_table_lj', function(data) {
+      //init the tab
+      var tableDataLj = document.getElementById('table_km_lj');
+      while(tableDataLj.childNodes.length>2){tableDataLj.removeChild(tableDataLj.lastChild);}
+
+      //push the data
+      for (index = 1; index < data.length; ++index) {
+         if(data[index] != null){
+           addDataKm(index,'lj',data[index][0],data[index][1],data[index][2],data[index][3]);
+          }
+       }
+    })
+
+    socket.on('init_data_table_ml', function(data) {
+      //init the tab
+      var tableDataMl = document.getElementById('table_km_ml');
+      while(tableDataMl.childNodes.length>2){tableDataMl.removeChild(tableDataMl.lastChild);}
+
+      //push the data
+      for (index = 1; index < data.length; ++index) {
+        if(data[index] != null){
+         addDataKm(index,'ml',data[index][0],data[index][1],data[index][2],data[index][3]);
+       }
+      }
+    })
+
+    socket.on('add_marker', function(data) {
+      updateMarker(data.user,data.lat,data.long);
+      updateIndicator(data.user,data.hr,data.speed,data.distance);
+    })
+
+    socket.on('add_data_table', function(data) {
+      addDataKm(data.nbk,data.user,data.time,data.tklk,data.speedlk,data.hrlk);
+    })
+
+
+    socket.on('init_value', function(data) {
+      updateChartData(window.tabDistMl,data.distanceML);
+      updateChartData(window.tabDistLj,data.distanceLJ);
+    })
+
+
+    socket.on('start_clock_lj', function(data) {
+      clock_lj.start();
+    })
+
+    socket.on('start_clock_ml', function(data) {
+      clock_ml.start();
+    })
+
+
+    socket.on('stop_clock_lj', function(data) {
+      clock_lj.stop();
+    })
+
+    socket.on('stop_clock_ml', function(data) {
+      clock_ml.stop();
+    })
+
+
+    socket.on('start_message', function(data) {
+      document.getElementById('message').textContent = data.message;
+
+    })
+
+    socket.on('stop_message', function(data) {
+      document.getElementById('message').textContent = "";
+    })
+
+    socket.on('init_clock_lj', function(data) {
+      clock_lj.setTime(data.timer);
+      if(!data.finish){
+          clock_lj.start();
+      }
+    })
+
+    socket.on('init_clock_ml', function(data) {
+      clock_ml.setTime(data.timer);
+      if(!data.finish){
+          clock_ml.start();
+      }
+    })
+
+
+    /*********SOCKET**********/
 }
