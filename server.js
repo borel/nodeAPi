@@ -77,6 +77,9 @@ router.route('/data/marker/ml/add')
 .post(function (req, res) {
   console.log("marker/ml/add=>Value");
   console.log(req.body);
+  console.log("timerML");
+  console.log(timestampML);
+
   //store the distance , hr , speed
   if(req.body.values.distance != null){
     distanceML  = req.body.values.distance;
