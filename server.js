@@ -132,6 +132,7 @@ router.route('/data/marker/lj/add')
   console.log(req.body);
   console.log("timerLJ");
   console.log(timestampLJ);
+  console.log("borel");
 
   //store the distance , hr , speed
   if(req.body.values.distance != null){
