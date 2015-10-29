@@ -40,6 +40,8 @@ var speedLJ = null;
 var hrML = null;
 var hrLJ = null;
 
+var timestampML = null;
+var timestampLJ = null;
 
 
 
@@ -91,12 +93,31 @@ router.route('/data/marker/ml/add')
   // If the clock is not start , then we statck the clock
   if(startMarathonDateML == null && req.body.values.time != null){
     //fiwe timestamp and convert to date
-    timestamp = (new Date().getTime() - req.body.values.time);
-    startMarathonDateML = new Date(timestamp);
+    dateTimestamp = (new Date().getTime() - req.body.values.time);
+    startMarathonDateML = new Date(dateTimestamp);
+
+    // save the timestamp
+    timestampML = req.body.values.time;
 
     // calcul the timer and send to IHM
     var timer = (new Date() - startMarathonDateML) / 1000;
     io.sockets.emit('init_clock_ml',{timer:timer,finish:false});
+
+  }else if(timestampML != null && req.body.values.time != null && timestampML > req.body.values.time){
+
+    //fiwe timestamp and convert to date
+    dateTimestamp = (new Date().getTime() - req.body.values.time);
+    startMarathonDateML = new Date(dateTimestamp);
+
+    // save the timestamp
+    timestampML = req.body.values.time;
+
+    // calcul the timer and send to IHM
+    var timer = (new Date() - startMarathonDateML) / 1000;
+    io.sockets.emit('init_clock_ml',{timer:timer,finish:false});
+
+    // init the data km
+    datasML = new Array();
   }
 
   //Emit io
@@ -122,16 +143,34 @@ router.route('/data/marker/lj/add')
     speedLJ = filterValue(speedLJ, round(req.body.values.speed * 3.6,1))
   }
 
-  // If the clock is not start , then we statck the clock
-  if(startMarathonDateLJ == null && req.body.values.time != null){
+  // first load
+  if(startMarathonDateLJ == null && req.body.values.time != null ){
 
     //fiwe timestamp and convert to date
-    timestamp = (new Date().getTime() - req.body.values.time);
-    startMarathonDateLJ = new Date(timestamp);
+    dateTimestamp = (new Date().getTime() - req.body.values.time);
+    startMarathonDateLJ = new Date(dateTimestamp);
+
+    // save the timestamp
+    timestampLJ = req.body.values.time;
 
     // calcul the timer and send to IHM
     var timer = (new Date() - startMarathonDateLJ) / 1000;
     io.sockets.emit('init_clock_lj',{timer:timer,finish:false});
+
+  }else if(timestampLJ != null && req.body.values.time != null && timestampLJ > req.body.values.time){
+    //fiwe timestamp and convert to date
+    dateTimestamp = (new Date().getTime() - req.body.values.time);
+    startMarathonDateLJ = new Date(dateTimestamp);
+
+    // save the timestamp
+    timestampLJ = req.body.values.time;
+
+    // calcul the timer and send to IHM
+    var timer = (new Date() - startMarathonDateLJ) / 1000;
+    io.sockets.emit('init_clock_lj',{timer:timer,finish:false});
+
+    // init the data km
+    datasLJ = new Array();
   }
 
   //Emit io
