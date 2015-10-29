@@ -133,14 +133,16 @@ router.route('/data/marker/lj/add')
   //store the distance , hr , speed
   if(req.body.values.distance != null){
     distanceLJ  = req.body.values.distance;
+  }else{
+    distanceLJ = 0;
   }
 
-  if(req.body.values.hr != null){
-    hrLJ  = round(req.body.values.hr,0);
-  }
+  hrLJ  = round(req.body.values.hr,0);
 
   if(req.body.values.speed != null){
     speedLJ = filterValue(speedLJ, round(req.body.values.speed * 3.6,1))
+  }else{
+    speedLJ = 0;
   }
 
   // first load
