@@ -96,9 +96,6 @@ router.route('/data/marker/ml/add')
     dateTimestamp = (new Date().getTime() - req.body.values.time);
     startMarathonDateML = new Date(dateTimestamp);
 
-    // save the timestamp
-    timestampML = req.body.values.time;
-
     // calcul the timer and send to IHM
     var timer = (new Date() - startMarathonDateML) / 1000;
     io.sockets.emit('init_clock_ml',{timer:timer,finish:false});
@@ -109,9 +106,6 @@ router.route('/data/marker/ml/add')
     dateTimestamp = (new Date().getTime() - req.body.values.time);
     startMarathonDateML = new Date(dateTimestamp);
 
-    // save the timestamp
-    timestampML = req.body.values.time;
-
     // calcul the timer and send to IHM
     var timer = (new Date() - startMarathonDateML) / 1000;
     io.sockets.emit('init_clock_ml',{timer:timer,finish:false});
@@ -119,6 +113,9 @@ router.route('/data/marker/ml/add')
     // init the data km
     datasML = new Array();
   }
+
+  // save the timestamp
+  timestampML = req.body.values.time;
 
   //Emit io
   io.sockets.emit('add_marker',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:hrML ,speed:speedML ,distance:distanceML});
@@ -154,9 +151,6 @@ router.route('/data/marker/lj/add')
     dateTimestamp = (new Date().getTime() - req.body.values.time);
     startMarathonDateLJ = new Date(dateTimestamp);
 
-    // save the timestamp
-    timestampLJ = req.body.values.time;
-
     // calcul the timer and send to IHM
     var timer = (new Date() - startMarathonDateLJ) / 1000;
     io.sockets.emit('init_clock_lj',{timer:timer,finish:false});
@@ -166,9 +160,6 @@ router.route('/data/marker/lj/add')
     dateTimestamp = (new Date().getTime() - req.body.values.time);
     startMarathonDateLJ = new Date(dateTimestamp);
 
-    // save the timestamp
-    timestampLJ = req.body.values.time;
-
     // calcul the timer and send to IHM
     var timer = (new Date() - startMarathonDateLJ) / 1000;
     io.sockets.emit('init_clock_lj',{timer:timer,finish:false});
@@ -176,6 +167,9 @@ router.route('/data/marker/lj/add')
     // init the data km
     datasLJ = new Array();
   }
+
+  // save the timestamp
+  timestampLJ = req.body.values.time;
 
   //Emit io
   io.sockets.emit('add_marker',{user:'lj' ,lat:req.body.values.lat , long:req.body.values.long , hr:hrLJ ,speed:speedLJ ,distance:distanceLJ});
