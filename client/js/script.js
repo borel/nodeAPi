@@ -22,7 +22,7 @@ var users = {};
 function mapInitialize() {
   map = new google.maps.Map(document.getElementById("map-canvas"), {
     zoom: 11,
-      center: new google.maps.LatLng(40.767542 , -73.971977)
+      center: new google.maps.LatLng(40.710 , -74.159)
   // Lyon  center: new google.maps.LatLng(45.764043, 4.835659)
   });
   infowindow = new google.maps.InfoWindow({ content: 'Test' });
