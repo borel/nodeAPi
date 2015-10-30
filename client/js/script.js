@@ -14,8 +14,8 @@ var map = null;
 var countLJ = null;
 var countML = null;
 var clock_ml = null;
-var clock_lj = null
-
+var clock_lj = null;
+var message = null;
 
 // tab of user information
 var users = {};
