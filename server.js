@@ -15,6 +15,9 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 
+// Sentence to say
+//Ne quittez pas la course, le réseau est temporairement saturé
+
 /////////////////////////////////////
 /// Functionnal var
 
@@ -43,6 +46,11 @@ var hrLJ = null;
 var timestampML = null;
 var timestampLJ = null;
 
+var stopDataML = false;
+var stopDataLJ = false;
+
+var stopIndicatorML = false;
+var stopIndicatorLJ = false;
 
 
 
@@ -121,7 +129,9 @@ router.route('/data/marker/ml/add')
   timestampML = req.body.values.time;
 
   //Emit io
-  io.sockets.emit('add_marker',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:hrML ,speed:speedML ,distance:distanceML});
+  if(!stopIndicatorML){
+    io.sockets.emit('add_marker',{user:'ml' ,lat:req.body.values.lat , long:req.body.values.long , hr:hrML ,speed:speedML ,distance:distanceML});
+  }
   res.send(200, 'OK');
 });
 
@@ -175,7 +185,9 @@ router.route('/data/marker/lj/add')
   timestampLJ = req.body.values.time;
 
   //Emit io
-  io.sockets.emit('add_marker',{user:'lj' ,lat:req.body.values.lat , long:req.body.values.long , hr:hrLJ ,speed:speedLJ ,distance:distanceLJ});
+  if(!stopIndicatorLJ){
+      io.sockets.emit('add_marker',{user:'lj' ,lat:req.body.values.lat , long:req.body.values.long , hr:hrLJ ,speed:speedLJ ,distance:distanceLJ});
+  }
   res.send(200, 'OK');
 });
 
@@ -184,7 +196,9 @@ router.route('/data/lj/add')
 .post(function (req, res) {
   console.log("km/lj/add=>Value");
   console.log(req.body);
-  addDataTable('lj',req.body.values.distance,req.body.values.tklk, req.body.values.speedlk, req.body.values.hrlk);
+  if(!stopLJ){
+    addDataTable('lj',req.body.values.distance,req.body.values.tklk, req.body.values.speedlk, req.body.values.hrlk);
+  }
   res.send(200, 'OK');
 });
 
@@ -193,8 +207,10 @@ router.route('/data/ml/add')
 .post(function (req, res) {
   console.log("km/ml/add=>Value");
   console.log(req.body);
-  addDataTable('ml',req.body.values.distance,req.body.values.tklk,req.body.values.speedlk, req.body.values.hrlk);
-  res.send(200, 'OK');
+  if(!stopDataML){
+    addDataTable('ml',req.body.values.distance,req.body.values.tklk,req.body.values.speedlk, req.body.values.hrlk);
+    res.send(200, 'OK');
+  }
 });
 
 
@@ -240,6 +256,118 @@ router.route('/message/add')
   res.send(200, 'OK');
 });
 
+
+/**************************/
+/***** Data Init ***/
+/*************************/
+
+router.route('/data/ml/init')
+//add
+.post(function (req, res) {
+  datasML = new Array();
+  res.send(200, 'OK');
+});
+
+
+router.route('/data/lj/init')
+//add
+.post(function (req, res) {
+  datasLJ = new Array();
+  res.send(200, 'OK');
+});
+
+
+/**************************/
+/***** Data Start/Stop ***/
+/*************************/
+
+router.route('/data/lj/stop')
+//add
+.post(function (req, res) {
+  // purge the table
+  datasLJ = new Array();
+  // stop to add value
+  stopLJ = true;
+  res.send(200, 'OK');
+});
+
+router.route('/data/ml/stop')
+//add
+.post(function (req, res) {
+  // purge the table
+  datasML = new Array();
+  // stop to add value
+  stopDataML = true;
+  res.send(200, 'OK');
+});
+
+router.route('/data/lj/start')
+//add
+.post(function (req, res) {
+  // purge the table
+  datasLJ = new Array();
+  // stop to add value
+  stopDataLJ = false;
+  res.send(200, 'OK');
+});
+
+router.route('/data/ml/start')
+//add
+.post(function (req, res) {
+  // purge the table
+  datasML = new Array();
+  // stop to add value
+  stopDataML = false;
+  res.send(200, 'OK');
+});
+
+
+/**************************/
+/***** Indicateur start/stop ***/
+/*************************/
+router.route('/indicator/lj/stop')
+//add
+.post(function (req, res) {
+  // purge the table
+  datasLJ = new Array();
+  // stop to add value
+  stopIndicatorLJ = true;
+  res.send(200, 'OK');
+});
+
+router.route('/indicator/ml/stop')
+//add
+.post(function (req, res) {
+  // purge the table
+  datasML = new Array();
+  // stop to add value
+  stopIndicatorML = true;
+  res.send(200, 'OK');
+});
+
+router.route('/indicator/lj/start')
+//add
+.post(function (req, res) {
+  // purge the table
+  datasLJ = new Array();
+  // stop to add value
+  stopIndicatorLJ = false;
+  res.send(200, 'OK');
+});
+
+router.route('/indicator/ml/start')
+//add
+.post(function (req, res) {
+  // purge the table
+  datasML = new Array();
+  // stop to add value
+  stopIndicatorML = false;
+  res.send(200, 'OK');
+});
+
+/**************************/
+/***** Test             ***/
+/*************************/
 router.route('/test/start')
 //add
 .post(function (req, res) {
@@ -467,8 +595,13 @@ function sendDataTestKm(distance){
   var testSpeedLj = 5 + (Math.random() * 1);
   var testSpeedMl = 4 + (Math.random() * 1);
 
-  addDataTable('lj',distance,"312",testSpeedLj,testHrLj);
-  addDataTable('ml',distance,"412",testSpeedLj,testHrMl);
+  if(!stopDataLJ){
+      addDataTable('lj',distance,"312",testSpeedLj,testHrLj);
+  }
+
+  if(!stopDataML){
+      addDataTable('ml',distance,"412",testSpeedLj,testHrMl);
+  }
 }
 
 
@@ -495,8 +628,13 @@ function sendDataTest(dist){
   hrLJ = hrLj;
   hrML = hrMl;
 
-  io.sockets.emit('add_marker',{user:'lj' , lat:latLj , long:longLj , hr:round(hrLj,0), speed:round(speedLj,1)  ,distance:dist});
-  io.sockets.emit('add_marker',{user:'ml' , lat:latMl , long:longMl , hr:round(hrMl,0) , speed:round(speedMl,1) ,distance:dist});
+  if(!stopIndicatorLJ){
+    io.sockets.emit('add_marker',{user:'lj' , lat:latLj , long:longLj , hr:round(hrLj,0), speed:round(speedLj,1)  ,distance:dist});
+  }
+
+  if(!stopIndicatorML){
+    io.sockets.emit('add_marker',{user:'ml' , lat:latMl , long:longMl , hr:round(hrMl,0) , speed:round(speedMl,1) ,distance:dist});
+  }
 }
 
 ///////////////////////////////

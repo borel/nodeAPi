@@ -131,6 +131,7 @@ function updateIndicator(name,hr,speed,distance){
     //update graph
     window.tabSpeedMl.update();
     window.tabHrMl.update();
+
     //Update labels if necessary
     if(hr != null){
       document.getElementById('hr_ml').textContent = hr + ' BPM';
