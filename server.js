@@ -196,7 +196,7 @@ router.route('/data/lj/add')
 .post(function (req, res) {
   console.log("km/lj/add=>Value");
   console.log(req.body);
-  if(!stopLJ){
+  if(!stopDataLJ){
     addDataTable('lj',req.body.values.distance,req.body.values.tklk, req.body.values.speedlk, req.body.values.hrlk);
   }
   res.send(200, 'OK');
@@ -287,7 +287,7 @@ router.route('/data/lj/stop')
   // purge the table
   datasLJ = new Array();
   // stop to add value
-  stopLJ = true;
+  stopDataLJ = true;
   res.send(200, 'OK');
 });
 
