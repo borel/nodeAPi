@@ -235,6 +235,8 @@ router.route('/clock/lj/start')
 router.route('/clock/ml/stop')
 //add
 .post(function (req, res) {
+  stopIndicatorML = true;
+  stopDataML = true;
   endMarathonDateML = new Date();
   io.sockets.emit('stop_clock_ml');
   res.send(200, 'OK');
@@ -243,6 +245,8 @@ router.route('/clock/ml/stop')
 router.route('/clock/lj/stop')
 //add
 .post(function (req, res) {
+  stopIndicatorLJ = true;
+  stopDataLJ = true;
   endMarathonDateLJ = new Date();
   io.sockets.emit('stop_clock_lj');
   res.send(200, 'OK');

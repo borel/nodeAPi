@@ -67,10 +67,6 @@ function createUser(name){
 
   // crearte the marker
   var marker = new google.maps.Marker({ map:map });
-  google.maps.event.addListener(marker, 'click', function() {
-    infowindow.setContent(marker.getTitle());
-    infowindow.open(map, marker);
-  });
 
   // Img management
   if(name === 'lj'){
@@ -113,7 +109,7 @@ function updateIndicator(name,hr,speed,distance){
     }
 
     if(distance != null){
-      document.getElementById('distance_lj').textContent = distance + ' métres';
+      document.getElementById('distance_lj').textContent = distance + ' mètres';
     }
 
   }else{
