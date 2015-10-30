@@ -511,7 +511,7 @@ function initValue(){
   io.sockets.emit('init_value',{distanceLJ:distanceLJ,distanceML:distanceML});
 
   if(message != null){
-      io.sockets.emit('start_message',{message:req.body.message});
+      io.sockets.emit('start_message',{message:message});
   }
 }
 
