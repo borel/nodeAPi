@@ -21,9 +21,9 @@ var users = {};
 
 function mapInitialize() {
   map = new google.maps.Map(document.getElementById("map-canvas"), {
-    zoom: 12,
-  // nyc     center: new google.maps.LatLng(40.742494, -73.953867)
-    center: new google.maps.LatLng(45.764043, 4.835659)
+    zoom: 11,
+      center: new google.maps.LatLng(40.767542 , -73.971977)
+  // Lyon  center: new google.maps.LatLng(45.764043, 4.835659)
   });
   infowindow = new google.maps.InfoWindow({ content: 'Test' });
   google.maps.event.addListener(map, 'click', function() {
