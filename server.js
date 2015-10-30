@@ -259,7 +259,7 @@ router.route('/message/add')
 //add
 .post(function (req, res) {
   message = req.body.message;
-  io.sockets.emit('start_message',{message:req.body.message});
+  io.sockets.emit('start_message',{message:message});
   res.send(200, 'OK');
 });
 
