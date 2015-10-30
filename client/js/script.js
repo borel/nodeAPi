@@ -13,8 +13,9 @@ ga('send', 'pageview');
 var map = null;
 var countLJ = null;
 var countML = null;
-var clock_ml = null
+var clock_ml = null;
 var clock_lj = null
+
 
 // tab of user information
 var users = {};

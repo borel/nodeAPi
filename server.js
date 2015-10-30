@@ -52,6 +52,8 @@ var stopDataLJ = false;
 var stopIndicatorML = false;
 var stopIndicatorLJ = false;
 
+var message = null:
+
 
 
 ////////////////////////////////////////
@@ -256,6 +258,7 @@ router.route('/clock/lj/stop')
 router.route('/message/add')
 //add
 .post(function (req, res) {
+  message = req.body.message;
   io.sockets.emit('start_message',{message:req.body.message});
   res.send(200, 'OK');
 });
@@ -506,6 +509,10 @@ function initValue(){
   console.log(distanceLJ);
   console.log(distanceML);
   io.sockets.emit('init_value',{distanceLJ:distanceLJ,distanceML:distanceML});
+
+  if(message != null){
+      io.sockets.emit('start_message',{message:message});
+  }
 }
 
 ///////////////////////////////
@@ -573,6 +580,7 @@ io.sockets.on('connection', function (socket) {
   initTimerMarathon();
   //init value on conection
   initValue();
+
 
 });
 
