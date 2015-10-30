@@ -587,7 +587,7 @@ io.sockets.on('connection', function (socket) {
 // For hosing on Heroku
 io.configure(function () {
   io.set("transports", ["xhr-polling"]);
-  io.set("polling duration", 2);
+  io.set("polling duration", 10);
   io.set('log level', 1)
 });
 
